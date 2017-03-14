@@ -140,7 +140,7 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
       writeDoc(w, doc)
 
       javaAnnotationHeader.foreach(w.wl)
-      w.w(s"${javaClassAccessModifierString}abstract class $javaClass$typeParamList").braced {
+      w.w(s"${javaClassAccessModifierString}interface $javaClass$typeParamList").braced {
         val skipFirst = SkipFirst()
         generateJavaConstants(w, i.consts)
 
