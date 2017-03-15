@@ -48,6 +48,16 @@ def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
                 val subclassname = typeDecl.ident.name
                 throw Error(typeDecl.ident.loc, s"$subclassname can not inherit $superclassname, is not an interface").toException
               }
+              val superInterface: Interface = superRef match {
+                case superType: Interface => {
+                  superType
+                }
+                case _ => throw Error(typeDecl.ident.loc, s"$superclassname is not an interface").toException
+              }
+              if (superInterface.ext.cpp) {
+                val classname = typeDecl.ident.name
+                throw Error(typeDecl.ident.loc, s"$classname cannot inherit interface implemented in C++").toException
+              }
             }
             case _ => // do nohting  
           }

@@ -90,7 +90,16 @@ private object IdlParser extends RegexParsers {
         val typeName = ident.name
         throw syntax.Error(ident.loc, s"error, only interface can have parent, $typeName is not an interface").toException
         None
-      } else {
+      }  else {
+        body match {
+          case in: Interface =>
+            if (in.ext.cpp && parent.isDefined) {
+              val typeName = ident.name
+              throw syntax.Error(ident.loc, s"C++ implemented interface $typeName cannot have parent").toException
+              None
+            }
+          case _ =>
+        }
         Some(InternTypeDecl(ident, typeParams, body, doc, origin, parent))
       }
     }
