@@ -42,8 +42,9 @@ sealed abstract class TypeDecl {
   val params: Seq[TypeParam]
   val body: TypeDef
   val origin: String
+  val parent: Option[TypeRef] = null
 }
-case class InternTypeDecl(override val ident: Ident, override val params: Seq[TypeParam], override val body: TypeDef, doc: Doc, override val origin: String) extends TypeDecl
+case class InternTypeDecl(override val ident: Ident, override val params: Seq[TypeParam], override val body: TypeDef, doc: Doc, override val origin: String, override val parent: Option[TypeRef]) extends TypeDecl
 case class ExternTypeDecl(override val ident: Ident, override val params: Seq[TypeParam], override val body: TypeDef, properties: Map[String, Any], override val origin: String) extends TypeDecl
 
 case class Ext(java: Boolean, cpp: Boolean, objc: Boolean) {
@@ -57,16 +58,30 @@ case class TypeRef(expr: TypeExpr) {
 }
 case class TypeExpr(ident: Ident, args: Seq[TypeExpr])
 
-sealed abstract class TypeDef
+object Type {
+  val TYPE_ENUM = 1
+  val TYPE_RECORD = 2
+  val TYPE_INTERFACE = 3
+}
+
+sealed abstract class TypeDef {
+  
+  def getType: Int
+}
 
 case class Const(ident: Ident, ty: TypeRef, value: Any, doc: Doc)
 
-case class Enum(options: Seq[Enum.Option]) extends TypeDef
+case class Enum(options: Seq[Enum.Option]) extends TypeDef {
+  override def getType: Int = Type.TYPE_ENUM
+}
+
 object Enum {
   case class Option(ident: Ident, doc: Doc)
 }
 
-case class Record(ext: Ext, fields: Seq[Field], consts: Seq[Const], derivingTypes: Set[DerivingType]) extends TypeDef
+case class Record(ext: Ext, fields: Seq[Field], consts: Seq[Const], derivingTypes: Set[DerivingType]) extends TypeDef {
+  override def getType: Int = Type.TYPE_RECORD
+}
 object Record {
   object DerivingType extends Enumeration {
     type DerivingType = Value
@@ -74,7 +89,11 @@ object Record {
   }
 }
 
-case class Interface(ext: Ext, methods: Seq[Interface.Method], consts: Seq[Const]) extends TypeDef
+case class Interface(ext: Ext, methods: Seq[Interface.Method], consts: Seq[Const]) extends TypeDef {
+  override def getType: Int = Type.TYPE_INTERFACE
+
+  var parent: Option[TypeRef] = None
+}
 object Interface {
   case class Method(ident: Ident, params: Seq[Field], ret: Option[TypeRef], doc: Doc, static: Boolean, const: Boolean)
 }

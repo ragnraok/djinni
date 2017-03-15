@@ -16,17 +16,17 @@
 
 package djinni
 
-import java.io.{File, FileNotFoundException, InputStreamReader, FileInputStream, Writer}
+import java.io.{File, FileInputStream, FileNotFoundException, InputStreamReader, Writer}
+import java.util.{Map => JMap}
 
 import djinni.ast.Interface.Method
 import djinni.ast.Record.DerivingType.DerivingType
-import djinni.syntax._
 import djinni.ast._
-import java.util.{Map => JMap}
+import djinni.syntax._
 import org.yaml.snakeyaml.Yaml
+
 import scala.collection.JavaConversions._
 import scala.collection.mutable
-import scala.util.control.Breaks._
 import scala.util.parsing.combinator.RegexParsers
 import scala.util.parsing.input.{Position, Positional}
 
@@ -38,7 +38,18 @@ val fileStack = mutable.Stack[File]()
 private object IdlParser extends RegexParsers {
   override protected val whiteSpace = """[ \t\n\r]+""".r
 
-  def idlFile(origin: String): Parser[IdlFile] = rep(importFileRef) ~ rep(typeDecl(origin)) ^^ { case imp~types => IdlFile(imp, types) }
+  def idlFile(origin: String): Parser[IdlFile] = rep(importFileRef) ~ rep(typeDecl(origin)) ^^ {
+    case imp~types => {
+      val actualTypes = mutable.ArrayBuffer.empty[TypeDecl]
+      for (t <- types) {
+        t match {
+          case Some(_type) => actualTypes.add(_type)
+          case None => // do nothing  
+        }
+      }
+      IdlFile(imp, actualTypes)
+    }
+  }
 
   def importFileRef(): Parser[FileRef] = {
     ("@" ~> directive) ~ ("\"" ~> filePath <~ "\"") ^^ {
@@ -73,8 +84,16 @@ private object IdlParser extends RegexParsers {
   def importDirective = "import".r
   def externDirective = "extern".r
 
-  def typeDecl(origin: String): Parser[TypeDecl] = doc ~ ident ~ typeList(ident ^^ TypeParam) ~ "=" ~ typeDef ^^ {
-    case doc~ident~typeParams~_~body => InternTypeDecl(ident, typeParams, body, doc, origin)
+  def typeDecl(origin: String): Parser[Option[TypeDecl]] = doc ~ ident ~ opt(inherit) ~ typeList(ident ^^ TypeParam) ~ "=" ~ typeDef ^^ {
+    case doc~ident~parent~typeParams~_~body => {
+      if ((body.getType == Type.TYPE_ENUM || body.getType == Type.TYPE_RECORD) && parent.isDefined) {
+        val typeName = ident.name
+        throw syntax.Error(ident.loc, s"error, only interface can have parent, $typeName is not an interface").toException
+        None
+      } else {
+        Some(InternTypeDecl(ident, typeParams, body, doc, origin, parent))
+      }
+    }
   }
 
   def ext(default: Ext) = (rep1("+" ~> ident) >> checkExts) | success(default)
@@ -105,6 +124,7 @@ private object IdlParser extends RegexParsers {
     success(Ext(foundJava, foundCpp, foundObjc))
   }
 
+  def inherit: Parser[TypeRef] = ":" ~> typeRef
   def typeDef: Parser[TypeDef] = record | enum | interface
 
   def recordHeader = "record" ~> extRecord
@@ -139,7 +159,7 @@ private object IdlParser extends RegexParsers {
       val methods = items collect {case m: Method => m}
       val consts = items collect {case c: Const => c}
       Interface(ext, methods, consts)
-    }
+    }  
   }
 
   def externTypeDecl: Parser[TypeDef] = externEnum | externInterface | externRecord

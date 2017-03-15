@@ -12,6 +12,7 @@ import scala.language.implicitConversions
 abstract class Marshal(spec: Spec) {
   // Typename string to be used to declare a type or template parameter, without namespace or package, except for extern types which are always fully qualified.
   def typename(tm: MExpr): String
+  def typename(name: String): String
   def typename(ty: TypeRef): String = typename(ty.resolved)
   // Same as typename() but always fully namespace or package qualified
   def fqTypename(tm: MExpr): String

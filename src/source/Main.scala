@@ -19,6 +19,7 @@ package djinni
 import java.io.{IOException, FileNotFoundException, FileInputStream, InputStreamReader, File, BufferedWriter, FileWriter}
 
 import djinni.generatorTools._
+import djinni.syntax.Error
 
 object Main {
 
@@ -258,7 +259,11 @@ object Main {
       case ex @ (_: FileNotFoundException | _: IOException) =>
         System.err.println("Error reading from --idl file: " + ex.getMessage)
         System.exit(1); return
+      case e: Error.Exception =>
+        System.err.println(e.error)
+        System.exit(1); return
     }
+      
     finally {
       if (inFileListWriter.isDefined) {
         inFileListWriter.get.close()

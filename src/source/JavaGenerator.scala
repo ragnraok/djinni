@@ -140,7 +140,16 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
       writeDoc(w, doc)
 
       javaAnnotationHeader.foreach(w.wl)
-      w.w(s"${javaClassAccessModifierString}interface $javaClass$typeParamList").braced {
+      val extendLiter = i.parent match {
+        case Some(superclass) => {
+          if (i.ext.java) {
+            val superclassname = marshal.typename(superclass.expr.ident.name)
+            s" extends $superclassname"
+          }
+        }
+        case _ => ""  
+      }
+      w.w(s"${javaClassAccessModifierString}interface $javaClass$typeParamList$extendLiter").braced {
         val skipFirst = SkipFirst()
         generateJavaConstants(w, i.consts)
 

@@ -16,16 +16,12 @@
 
 package djinni
 
-import java.util
-
 import djinni.ast.Record.DerivingType
-import djinni.ast.Record.DerivingType.DerivingType
-import djinni.ast.Record.DerivingType.DerivingType
-import djinni.syntax._
 import djinni.ast._
 import djinni.meta._
-import scala.collection.immutable
-import scala.collection.mutable
+import djinni.syntax._
+
+import scala.collection.{immutable, mutable}
 import scala.collection.mutable.ArrayBuffer
 
 package object resolver {
@@ -36,6 +32,29 @@ def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
 
   try {
     var topScope = metas
+    
+    // Check interface inherit
+    val typeDefs = mutable.HashMap.empty[String, TypeDef]
+    for (typeDecl <- idl) {
+      typeDefs.put(typeDecl.ident.name, typeDecl.body)
+    }
+    for (typeDecl <- idl) {
+      typeDecl.parent match {
+        case Some(superclass) => {
+          val superclassname = superclass.expr.ident.name
+          typeDefs.get(superclassname) match {
+            case Some(superRef) => {
+              if (superRef.getType != Type.TYPE_INTERFACE) {
+                val subclassname = typeDecl.ident.name
+                throw Error(typeDecl.ident.loc, s"$subclassname can not inherit $superclassname, is not an interface").toException
+              }
+            }
+            case _ => // do nohting  
+          }
+        }
+        case _ => // do nothing
+      }
+    }
 
     // Load top-level names into scope
     val topLevelDupeChecker = new DupeChecker("type")
@@ -70,7 +89,7 @@ def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
         scope = scope.updated(typeParam.ident.name, MParam(typeParam.ident.name))
       }
 
-      resolve(scope, typeDecl.body)
+      resolve(scope, typeDecl.body, typeDecl.parent)
     }
 
     for (typeDecl <- idl) {
@@ -84,11 +103,11 @@ def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
   None
 }
 
-private def resolve(scope: Scope, typeDef: TypeDef) {
+private def resolve(scope: Scope, typeDef: TypeDef, parent: Option[TypeRef]) {
   typeDef match {
     case e: Enum => resolveEnum(scope, e)
     case r: Record => resolveRecord(scope, r)
-    case i: Interface => resolveInterface(scope, i)
+    case i: Interface => resolveInterface(scope, i, parent)
   }
 }
 
@@ -263,7 +282,7 @@ private def resolveRecord(scope: Scope, r: Record) {
   }
 }
 
-private def resolveInterface(scope: Scope, i: Interface) {
+private def resolveInterface(scope: Scope, i: Interface, parent: Option[TypeRef]) {
   // Const and static methods are only allowed on +c (only) interfaces
   if (i.ext.java || i.ext.objc) {
     for (m <- i.methods) {
@@ -297,6 +316,9 @@ private def resolveInterface(scope: Scope, i: Interface) {
     dupeChecker.check(c.ident)
     resolveRef(scope, c.ty)
   }
+  
+  i.parent = parent
+  
 }
 
 private def resolveRef(scope: Scope, r: TypeRef) {

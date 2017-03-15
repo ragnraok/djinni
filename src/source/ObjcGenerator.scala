@@ -87,6 +87,17 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
     val self = marshal.typename(ident, i)
 
     refs.header.add("#import <Foundation/Foundation.h>")
+    
+    var inhertLiter = ""
+    i.parent match {
+      case Some(supertype) => {
+        var superincludefilename = marshal.headerName(supertype.expr.ident.name)
+        refs.header.add("#import \"" + superincludefilename + "\"")
+        var supertypename = marshal.typename(supertype.expr.ident.name)
+        inhertLiter = s" <$supertypename>"
+      }
+      case _ =>   
+    }
 
     def writeObjcFuncDecl(method: Interface.Method, w: IndentWriter) {
       val label = if (method.static) "+" else "-"
@@ -105,7 +116,7 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
       }
       w.wl
       writeDoc(w, doc)
-      if (i.ext.objc) w.wl(s"@protocol $self") else w.wl(s"@interface $self : NSObject")
+      if (i.ext.objc) w.wl(s"@protocol $self$inhertLiter") else w.wl(s"@interface $self : NSObject")
       for (m <- i.methods) {
         w.wl
         writeDoc(w, m.doc)

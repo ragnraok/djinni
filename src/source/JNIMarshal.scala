@@ -8,6 +8,10 @@ class JNIMarshal(spec: Spec) extends Marshal(spec) {
 
   // For JNI typename() is always fully qualified and describes the mangled Java type to be used in field/method signatures
   override def typename(tm: MExpr): String = javaTypeSignature(tm)
+  override def typename(name: String): String = {
+    val javaClassName = idJava.ty(name)
+    spec.javaPackage.fold(javaClassName)(p => p.replaceAllLiterally(".", "/") + "/" + javaClassName)
+  }
   def typename(name: String, ty: TypeDef) = s"L${undecoratedTypename(name, ty)};"
 
   override def fqTypename(tm: MExpr): String = typename(tm)
@@ -132,5 +136,4 @@ class JNIMarshal(spec: Spec) extends Marshal(spec) {
     case _: MPrimitive => false
     case _ => true
   }
-
 }

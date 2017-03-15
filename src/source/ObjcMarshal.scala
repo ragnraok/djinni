@@ -10,6 +10,7 @@ class ObjcMarshal(spec: Spec) extends Marshal(spec) {
     val (name, _) = toObjcType(tm)
     name
   }
+  override def typename(name: String): String = idObjc.ty(name)
   def typename(name: String, ty: TypeDef): String = idObjc.ty(name)
 
   override def fqTypename(tm: MExpr): String = typename(tm)

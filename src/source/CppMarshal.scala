@@ -11,6 +11,7 @@ class CppMarshal(spec: Spec) extends Marshal(spec) {
   // has not been requested.
 
   override def typename(tm: MExpr): String = toCppType(tm, None, Seq())
+  override def typename(name: String): String = idCpp.ty(name)
   def typename(tm: MExpr, scopeSymbols: Seq[String]): String = toCppType(tm, None, scopeSymbols)
   def typename(ty: TypeRef, scopeSymbols: Seq[String]): String = typename(ty.resolved, scopeSymbols)
   def typename(name: String, ty: TypeDef): String = ty match {

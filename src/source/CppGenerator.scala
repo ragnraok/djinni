@@ -273,12 +273,28 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
     })
 
     val self = marshal.typename(ident, i)
+    var superclassLiter = ""
+    if (i.ext.java || i.ext.objc) {
+      i.parent match {
+        case Some(superclass) => {
+          val supertypename = marshal.typename(superclass.expr.ident.name)
+          superclassLiter = s" : public $supertypename"
+          val superclassfilename = superclass.expr.ident.name + ".hpp"
+          refs.hpp.add("#include " + "\"" + superclassfilename + "\"")
+          refs.hppFwds.add(s"class $supertypename;")
+        }
+        case _ => {
+          superclassLiter = ""
+        }
+      }
+    }
+    
     val methodNamesInScope = i.methods.map(m => idCpp.method(m.ident))
 
     writeHppFile(ident, origin, refs.hpp, refs.hppFwds, w => {
       writeDoc(w, doc)
       writeCppTypeParams(w, typeParams)
-      w.w(s"class $self").bracedSemi {
+      w.w(s"class $self$superclassLiter").bracedSemi {
         w.wlOutdent("public:")
         // Destructor
         w.wl(s"virtual ~$self() {}")
