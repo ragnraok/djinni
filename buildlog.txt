@@ -1,0 +1,34 @@
+cd example/android/ && ./gradlew app:assembleDebug
+:app:preBuild
+:app:compileDebugNdk UP-TO-DATE
+:app:preDebugBuild
+:app:checkDebugManifest
+:app:prepareDebugDependencies
+:app:compileDebugAidl UP-TO-DATE
+:app:compileDebugRenderscript UP-TO-DATE
+:app:generateDebugBuildConfig UP-TO-DATE
+:app:generateDebugAssets UP-TO-DATE
+:app:mergeDebugAssets UP-TO-DATE
+:app:generateDebugResValues UP-TO-DATE
+:app:generateDebugResources UP-TO-DATE
+:app:mergeDebugResources UP-TO-DATE
+:app:processDebugManifest UP-TO-DATE
+:app:processDebugResources UP-TO-DATE
+:app:generateDebugSources UP-TO-DATE
+:app:ndkBuild
+make[1]: Entering directory `/Users/ragnarok/Works/MMSource/djinni/example/android/app'
+[arm64-v8a] Install        : libtextsort_jni.so => libs/arm64-v8a/libtextsort_jni.so
+[x86_64] Install        : libtextsort_jni.so => libs/x86_64/libtextsort_jni.so
+[mips64] Install        : libtextsort_jni.so => libs/mips64/libtextsort_jni.so
+[armeabi-v7a] Install        : libtextsort_jni.so => libs/armeabi-v7a/libtextsort_jni.so
+[armeabi] Install        : libtextsort_jni.so => libs/armeabi/libtextsort_jni.so
+[x86] Install        : libtextsort_jni.so => libs/x86/libtextsort_jni.so
+[mips] Install        : libtextsort_jni.so => libs/mips/libtextsort_jni.so
+make[1]: Leaving directory `/Users/ragnarok/Works/MMSource/djinni/example/android/app'
+:app:compileDebugJava UP-TO-DATE
+:app:preDexDebug UP-TO-DATE
+:app:dexDebug FAILED
+
+BUILD FAILED
+
+Total time: 16.034 secs

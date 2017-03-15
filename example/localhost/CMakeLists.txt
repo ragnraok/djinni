@@ -37,14 +37,14 @@ file(
   ../generated-src/cpp/*.cpp
   ../handwritten-src/cpp/*.cpp)
 
-set(textsort_common_flags "-Wall -Werror -std=c++1y")
+set(textsort_common_flags "-Wall -std=c++1y")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${textsort_common_flags}")
 if(UNIX OR APPLE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
-set(textsort_srcs ${support_srcs} ${textsort_srcs}) 
+set(textsort_srcs ${support_srcs} ${textsort_srcs})
 
 add_library(TextSortNative SHARED ${textsort_srcs})
 include_directories(

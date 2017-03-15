@@ -17,6 +17,11 @@ sort_items = interface +c {
     static run_sort(items: item_list): item_list;
 }
 
-textbox_listener:sort_items = interface +j +o {
+super_listtener = interface +j +o {
     update(items: item_list);
+}
+
+textbox_listener: super_listtener = interface +j +o {
+    #update(items: item_list);
+    updateNew(items: item_list);
 }

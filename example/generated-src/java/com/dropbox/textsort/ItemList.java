@@ -4,8 +4,6 @@
 package com.dropbox.textsort;
 
 import java.util.ArrayList;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 
 /*package*/ final class ItemList {
 
@@ -13,11 +11,10 @@ import javax.annotation.Nonnull;
     /*package*/ final ArrayList<String> mItems;
 
     public ItemList(
-            @Nonnull ArrayList<String> items) {
+            ArrayList<String> items) {
         this.mItems = items;
     }
 
-    @Nonnull
     public ArrayList<String> getItems() {
         return mItems;
     }

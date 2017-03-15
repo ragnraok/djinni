@@ -35,6 +35,8 @@ void SortItemsImpl::sort(sort_order order, const ItemList & items) {
 
     // Pass result to client interface
     this->m_listener->update(ItemList(lines));
+    std::sort(lines.begin(), lines.end(), std::less<std::string>());
+    this->m_listener->updateNew(ItemList(lines));
 }
 
 ItemList SortItems::run_sort(const ItemList & items) {

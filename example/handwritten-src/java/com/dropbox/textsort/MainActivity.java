@@ -2,11 +2,14 @@ package com.dropbox.textsort;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static com.dropbox.textsort.Util.TAG;
 
 public class MainActivity extends Activity {
 
@@ -37,14 +40,17 @@ public class MainActivity extends Activity {
     }
 
     public void sortAsc(View view) {
+        Log.i(TAG, "sort asc");
         this.sort(SortOrder.ASCENDING);
     }
 
     public void sortDesc(View view) {
+        Log.i(TAG, "sortDesc");
         this.sort(SortOrder.DESCENDING);
     }
 
     public void sortRandom(View view) {
+        Log.i(TAG, "sortRandom");
         this.sort(SortOrder.RANDOM);
     }
 }

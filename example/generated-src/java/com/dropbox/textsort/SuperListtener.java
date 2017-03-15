@@ -3,9 +3,6 @@
 
 package com.dropbox.textsort;
 
-/*package*/ enum SortOrder {
-    ASCENDING,
-    DESCENDING,
-    RANDOM,
-    ;
+/*package*/ interface SuperListtener {
+    public void update(ItemList items);
 }

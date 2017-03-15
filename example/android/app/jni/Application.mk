@@ -1,8 +1,8 @@
 # Android makefile for textsort shared lib, jni wrapper around libtextsort C API
 
-APP_ABI := all
-APP_OPTIM := release
-APP_PLATFORM := android-8
+APP_ABI := armeabi
+#APP_OPTIM := release
+APP_PLATFORM := android-15
 # GCC 4.9 Toolchain - requires NDK r10
 NDK_TOOLCHAIN_VERSION = 4.9
 # GNU libc++ is the only Android STL which supports C++11 features

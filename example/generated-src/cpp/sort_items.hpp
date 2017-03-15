@@ -16,7 +16,7 @@ public:
     virtual ~SortItems() {}
 
     /** For the iOS / Android demo */
-    virtual void sort(sort_order order, const ItemList & items) = 0;
+    virtual void sort(sort_order order, const ItemList & items) {}
 
     static std::shared_ptr<SortItems> create_with_listener(const std::shared_ptr<TextboxListener> & listener);
 

@@ -3,19 +3,13 @@
 
 #pragma once
 
-#include "super_listtener.hpp"
-
 namespace textsort {
 
-class SuperListtener;
 struct ItemList;
 
-class TextboxListener : public SuperListtener {
+class SuperListtener {
 public:
-    virtual ~TextboxListener() {}
-
-    /**update(items: item_list); */
-    virtual void updateNew(const ItemList & items) {}
+    virtual ~SuperListtener() {}
 
     virtual void update(const ItemList & items) {}
 };
