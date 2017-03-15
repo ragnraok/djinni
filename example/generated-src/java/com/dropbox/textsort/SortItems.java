@@ -4,19 +4,15 @@
 package com.dropbox.textsort;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 
 /*package*/ abstract class SortItems {
     /** For the iOS / Android demo */
-    public abstract void sort(@Nonnull SortOrder order, @Nonnull ItemList items);
+    public abstract void sort(SortOrder order, ItemList items);
 
-    @CheckForNull
-    public static native SortItems createWithListener(@CheckForNull TextboxListener listener);
+    public static native SortItems createWithListener(TextboxListener listener);
 
     /** For the localhost / command-line demo */
-    @Nonnull
-    public static native ItemList runSort(@Nonnull ItemList items);
+    public static native ItemList runSort(ItemList items);
 
     private static final class CppProxy extends SortItems
     {

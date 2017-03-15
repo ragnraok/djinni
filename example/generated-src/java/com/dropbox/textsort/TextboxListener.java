@@ -3,9 +3,9 @@
 
 package com.dropbox.textsort;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+/*package*/ interface TextboxListener extends SuperListtener {
+    /**update(items: item_list); */
+    public void updateNew(ItemList items);
 
-/*package*/ abstract class TextboxListener {
-    public abstract void update(@Nonnull ItemList items);
+    public void update(ItemList items);
 }
