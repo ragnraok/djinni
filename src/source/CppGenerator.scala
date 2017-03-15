@@ -310,7 +310,7 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
             w.wl(s"static $ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")};")
           } else {
             val constFlag = if (m.const) " const" else ""
-            w.wl(s"virtual $ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")}$constFlag = 0;")
+            w.wl(s"virtual $ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")}$constFlag {}")
           }
         }
       }
