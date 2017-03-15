@@ -27,6 +27,8 @@ import scala.collection.mutable.ArrayBuffer
 package object resolver {
 
 type Scope = immutable.Map[String,Meta]
+  
+val typeDefs = mutable.HashMap.empty[String, TypeDef]
 
 def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
 
@@ -34,7 +36,7 @@ def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
     var topScope = metas
     
     // Check interface inherit
-    val typeDefs = mutable.HashMap.empty[String, TypeDef]
+    
     for (typeDecl <- idl) {
       typeDefs.put(typeDecl.ident.name, typeDecl.body)
     }
@@ -328,6 +330,19 @@ private def resolveInterface(scope: Scope, i: Interface, parent: Option[TypeRef]
   }
   
   i.parent = parent
+  
+  parent match {
+    case Some(superTypeRef) => {
+      typeDefs.get(superTypeRef.expr.ident.name) match {
+        case Some(superType) => {
+          i.methods = Seq.concat[Interface.Method](i.methods, superType.asInstanceOf[Interface].methods)
+        }
+      }
+    }
+    case _ =>  
+  }
+  
+  
   
 }
 
