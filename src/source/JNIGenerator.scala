@@ -175,7 +175,7 @@ class JNIGenerator(spec: Spec) extends Generator(spec) {
     writeJniFiles(origin, params.nonEmpty, ident, refs, writeJniPrototype, writeJniBody)
   }
 
-  override def generateInterface(origin: String, ident: Ident, doc: Doc, typeParams: Seq[TypeParam], i: Interface) {
+  override def  generateInterface(origin: String, ident: Ident, doc: Doc, typeParams: Seq[TypeParam], i: Interface) {
     val refs = new JNIRefs(ident.name)
     i.methods.foreach(m => {
       m.params.foreach(p => refs.find(p.ty))
@@ -226,13 +226,14 @@ class JNIGenerator(spec: Spec) extends Generator(spec) {
         w.wl(s"friend ::djinni::JniClass<$jniSelf>;")
         w.wl(s"friend $baseType;")
         w.wl
+        val allMethods = Seq.concat[Interface.Method](i.methods, i.superMethods)
         if (i.ext.java) {
           w.wl(s"class JavaProxy final : ::djinni::JavaProxyHandle<JavaProxy>, public $cppSelf").bracedSemi {
             w.wlOutdent(s"public:")
             w.wl(s"JavaProxy(JniType j);")
             w.wl(s"~JavaProxy();")
             w.wl
-            for (m <- i.methods) {
+            for (m <- allMethods) {
               val ret = cppMarshal.fqReturnType(m.ret)
               val params = m.params.map(p => cppMarshal.fqParamType(p.ty) + " " + idCpp.local(p.ident))
               w.wl(s"$ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")} override;")
@@ -243,7 +244,7 @@ class JNIGenerator(spec: Spec) extends Generator(spec) {
           }
           w.wl
           w.wl(s"const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass(${q(classLookup)}) };")
-          for (m <- i.methods) {
+          for (m <- allMethods) {
             val javaMethodName = idJava.method(m.ident)
             val javaMethodSig = q(jniMarshal.javaMethodSignature(m.params, m.ret))
             w.wl(s"const jmethodID method_$javaMethodName { ::djinni::jniGetMethodID(clazz.get(), ${q(javaMethodName)}, $javaMethodSig) };")
@@ -269,7 +270,8 @@ class JNIGenerator(spec: Spec) extends Generator(spec) {
         writeJniTypeParams(w, typeParams)
         w.wl(s"$jniSelfWithParams::JavaProxy::~JavaProxy() = default;")
         w.wl
-        for (m <- i.methods) {
+        val allMethods = Seq.concat[Interface.Method](i.methods, i.superMethods)
+        for (m <- allMethods) {
           val ret = cppMarshal.fqReturnType(m.ret)
           val params = m.params.map(p => cppMarshal.fqParamType(p.ty) + " c_" + idCpp.local(p.ident))
           writeJniTypeParams(w, typeParams)

@@ -29,6 +29,7 @@ package object resolver {
 type Scope = immutable.Map[String,Meta]
   
 val typeDefs = mutable.HashMap.empty[String, TypeDef]
+val typeParents = mutable.HashMap.empty[String, String]  
 
 def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
 
@@ -60,6 +61,7 @@ def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
                 val classname = typeDecl.ident.name
                 throw Error(typeDecl.ident.loc, s"$classname cannot inherit interface implemented in C++").toException
               }
+              typeParents.put(typeDecl.ident.name, superclassname)
             }
             case _ => // do nohting  
           }
@@ -331,20 +333,32 @@ private def resolveInterface(scope: Scope, i: Interface, parent: Option[TypeRef]
   
   i.parent = parent
   
+//  var superMethods = Seq.empty[Interface.Method]
   parent match {
     case Some(superTypeRef) => {
       typeDefs.get(superTypeRef.expr.ident.name) match {
         case Some(superType) => {
-          i.methods = Seq.concat[Interface.Method](i.methods, superType.asInstanceOf[Interface].methods)
+          i.superMethods = collectSuperMethods(superTypeRef.expr.ident.name, i.superMethods)
         }
+        case _ =>  
       }
     }
     case _ =>  
   }
-  
-  
-  
 }
+  
+private def collectSuperMethods(typeName: String, superMethods: Seq[Interface.Method]): Seq[Interface.Method] = {
+  typeDefs.get(typeName) match {
+    case Some(_type) => {
+      val methods = Seq.concat[Interface.Method](_type.asInstanceOf[Interface].methods, superMethods)
+      typeParents.get(typeName) match {
+        case Some(superTypeName) => collectSuperMethods(superTypeName, methods)
+        case _  => methods
+      }
+    }
+    case _ => superMethods
+  }
+}  
 
 private def resolveRef(scope: Scope, r: TypeRef) {
   if (r.resolved != null) throw new AssertionError("double-resolve?")

@@ -89,10 +89,11 @@ object Record {
   }
 }
 
-case class Interface(ext: Ext, var methods: Seq[Interface.Method], consts: Seq[Const]) extends TypeDef {
+case class Interface(ext: Ext, methods: Seq[Interface.Method], consts: Seq[Const]) extends TypeDef {
   override def getType: Int = Type.TYPE_INTERFACE
 
   var parent: Option[TypeRef] = None
+  var superMethods: Seq[Interface.Method] = Seq.empty[Interface.Method]
 }
 object Interface {
   case class Method(ident: Ident, params: Seq[Field], ret: Option[TypeRef], doc: Doc, static: Boolean, const: Boolean)
