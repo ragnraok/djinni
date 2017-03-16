@@ -16,8 +16,6 @@ public:
 
     /**update(items: item_list); */
     virtual void updateNew(const ItemList & items) {}
-
-    virtual void update(const ItemList & items) {}
 };
 
 }  // namespace textsort

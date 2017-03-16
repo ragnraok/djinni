@@ -6,6 +6,4 @@ package com.dropbox.textsort;
 /*package*/ interface TextboxListener extends SuperListtener {
     /**update(items: item_list); */
     public void updateNew(ItemList items);
-
-    public void update(ItemList items);
 }

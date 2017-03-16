@@ -19,4 +19,10 @@
     _textView.text = str;
 }
 
+//- (void)updateNew:(nonnull TXSItemList *)items
+//{
+////    NSString *str = [items.items componentsJoinedByString:@"\n"];
+//    NSLog(@"udpateNew");
+//}
+
 @end

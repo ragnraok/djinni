@@ -11,6 +11,4 @@
 /**update(items: item_list); */
 - (void)updateNew:(nonnull TXSItemList *)items;
 
-- (void)update:(nonnull TXSItemList *)items;
-
 @end

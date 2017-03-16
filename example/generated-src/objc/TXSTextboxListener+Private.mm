@@ -24,12 +24,6 @@ public:
             [djinni_private_get_proxied_objc_object() updateNew:(::djinni_generated::ItemList::fromCpp(c_items))];
         }
     }
-    void update(const ::textsort::ItemList & c_items) override
-    {
-        @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() update:(::djinni_generated::ItemList::fromCpp(c_items))];
-        }
-    }
 };
 
 }  // namespace djinni_generated
