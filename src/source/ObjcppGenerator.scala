@@ -213,7 +213,8 @@ class ObjcppGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
             w.wl(s"friend class ${objcppMarshal.helperClassWithNs(ident)};")
             w.wlOutdent("public:")
             w.wl("using ObjcProxyBase::ObjcProxyBase;")
-            for (m <- i.methods) {
+            val allMethods = Seq.concat[Interface.Method](i.methods, i.superMethods)
+            for (m <- allMethods) {
               val ret = cppMarshal.fqReturnType(m.ret)
               val params = m.params.map(p => cppMarshal.fqParamType(p.ty) + " c_" + idCpp.local(p.ident))
               w.wl(s"$ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")} override").braced {
