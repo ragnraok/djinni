@@ -37,6 +37,7 @@ void SortItemsImpl::sort(sort_order order, const ItemList & items) {
     this->m_listener->update(ItemList(lines));
     std::sort(lines.begin(), lines.end(), std::less<std::string>());
     this->m_listener->updateNew(ItemList(lines));
+    this->m_listener->updateSuper();
 }
 
 ItemList SortItems::run_sort(const ItemList & items) {

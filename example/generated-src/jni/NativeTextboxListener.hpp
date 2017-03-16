@@ -34,6 +34,7 @@ private:
         ~JavaProxy();
 
         void updateNew(const ::textsort::ItemList & items) override;
+        void updateSuper() override;
         void update(const ::textsort::ItemList & items) override;
 
     private:
@@ -42,6 +43,7 @@ private:
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/dropbox/textsort/TextboxListener") };
     const jmethodID method_updateNew { ::djinni::jniGetMethodID(clazz.get(), "updateNew", "(Lcom/dropbox/textsort/ItemList;)V") };
+    const jmethodID method_updateSuper { ::djinni::jniGetMethodID(clazz.get(), "updateSuper", "()V") };
     const jmethodID method_update { ::djinni::jniGetMethodID(clazz.get(), "update", "(Lcom/dropbox/textsort/ItemList;)V") };
 };
 

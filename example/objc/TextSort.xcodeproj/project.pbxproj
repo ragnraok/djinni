@@ -17,6 +17,8 @@
 		65D7FDFB19AD0CDF0038F82F /* TXSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D7FDF519AD0CDF0038F82F /* TXSAppDelegate.m */; };
 		65D7FDFC19AD0CDF0038F82F /* TXSTextboxListenerImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D7FDF719AD0CDF0038F82F /* TXSTextboxListenerImpl.m */; };
 		65D7FDFD19AD0CDF0038F82F /* TXSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D7FDF919AD0CDF0038F82F /* TXSViewController.m */; };
+		7E6097F41E7A8C1000AE028F /* TXSSuperSuperListenerImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6097F31E7A8C1000AE028F /* TXSSuperSuperListenerImpl.m */; };
+		7ED06C931E7A569F002D728F /* TXSTextboxSuperListenerImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED06C921E7A569F002D728F /* TXSTextboxSuperListenerImpl.m */; };
 		B003051919B70561008E1F67 /* libdjinni_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B003051819B70561008E1F67 /* libdjinni_objc.a */; };
 		B097B6BC19B1C07E0047653A /* libtextsort_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B097B6BB19B1C07E0047653A /* libtextsort_objc.a */; };
 /* End PBXBuildFile section */
@@ -38,6 +40,10 @@
 		65D7FDF719AD0CDF0038F82F /* TXSTextboxListenerImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXSTextboxListenerImpl.m; sourceTree = "<group>"; };
 		65D7FDF819AD0CDF0038F82F /* TXSViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXSViewController.h; sourceTree = "<group>"; };
 		65D7FDF919AD0CDF0038F82F /* TXSViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXSViewController.m; sourceTree = "<group>"; };
+		7E6097F11E7A8BA600AE028F /* TXSSuperSuperListenerImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXSSuperSuperListenerImpl.h; sourceTree = "<group>"; };
+		7E6097F31E7A8C1000AE028F /* TXSSuperSuperListenerImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXSSuperSuperListenerImpl.m; sourceTree = "<group>"; };
+		7ED06C921E7A569F002D728F /* TXSTextboxSuperListenerImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXSTextboxSuperListenerImpl.m; sourceTree = "<group>"; };
+		7ED06C941E7A57E5002D728F /* TXSTextboxSuperListenerImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXSTextboxSuperListenerImpl.h; sourceTree = "<group>"; };
 		B003051819B70561008E1F67 /* libdjinni_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_objc.a; path = "../../support-lib/build/Debug-iphoneos/libdjinni_objc.a"; sourceTree = "<group>"; };
 		B097B6BB19B1C07E0047653A /* libtextsort_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtextsort_objc.a; path = "../../build/Debug-iphoneos/libtextsort_objc.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,6 +117,8 @@
 		65D7FDF219AD0C730038F82F /* handwritten-objc */ = {
 			isa = PBXGroup;
 			children = (
+				7E6097F11E7A8BA600AE028F /* TXSSuperSuperListenerImpl.h */,
+				7ED06C941E7A57E5002D728F /* TXSTextboxSuperListenerImpl.h */,
 				65D7FDF319AD0CDF0038F82F /* main.mm */,
 				65D7FDF419AD0CDF0038F82F /* TXSAppDelegate.h */,
 				65D7FDF519AD0CDF0038F82F /* TXSAppDelegate.m */,
@@ -118,6 +126,8 @@
 				65D7FDF719AD0CDF0038F82F /* TXSTextboxListenerImpl.m */,
 				65D7FDF819AD0CDF0038F82F /* TXSViewController.h */,
 				65D7FDF919AD0CDF0038F82F /* TXSViewController.m */,
+				7ED06C921E7A569F002D728F /* TXSTextboxSuperListenerImpl.m */,
+				7E6097F31E7A8C1000AE028F /* TXSSuperSuperListenerImpl.m */,
 			);
 			name = "handwritten-objc";
 			path = "../handwritten-src/objc";
@@ -191,8 +201,10 @@
 			files = (
 				65D7FDFC19AD0CDF0038F82F /* TXSTextboxListenerImpl.m in Sources */,
 				65D7FDFB19AD0CDF0038F82F /* TXSAppDelegate.m in Sources */,
+				7ED06C931E7A569F002D728F /* TXSTextboxSuperListenerImpl.m in Sources */,
 				65D7FDFD19AD0CDF0038F82F /* TXSViewController.m in Sources */,
 				65D7FDFA19AD0CDF0038F82F /* main.mm in Sources */,
+				7E6097F41E7A8C1000AE028F /* TXSSuperSuperListenerImpl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

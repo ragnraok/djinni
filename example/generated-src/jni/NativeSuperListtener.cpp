@@ -22,5 +22,12 @@ void NativeSuperListtener::JavaProxy::update(const ::textsort::ItemList & c_item
                            ::djinni::get(::djinni_generated::NativeItemList::fromCpp(jniEnv, c_items)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
+void NativeSuperListtener::JavaProxy::updateSuper() {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeSuperListtener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_updateSuper);
+    ::djinni::jniExceptionCheck(jniEnv);
+}
 
 }  // namespace djinni_generated

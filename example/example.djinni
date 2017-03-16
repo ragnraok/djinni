@@ -21,7 +21,7 @@ super_super_listener = interface +j +o {
     updateSuper();
 }
 
-super_listtener = interface +j +o {
+super_listtener: super_super_listener = interface +j +o {
     update(items: item_list);
 }
 

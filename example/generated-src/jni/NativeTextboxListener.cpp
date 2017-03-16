@@ -22,6 +22,13 @@ void NativeTextboxListener::JavaProxy::updateNew(const ::textsort::ItemList & c_
                            ::djinni::get(::djinni_generated::NativeItemList::fromCpp(jniEnv, c_items)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
+void NativeTextboxListener::JavaProxy::updateSuper() {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeTextboxListener>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_updateSuper);
+    ::djinni::jniExceptionCheck(jniEnv);
+}
 void NativeTextboxListener::JavaProxy::update(const ::textsort::ItemList & c_items) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);

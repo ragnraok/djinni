@@ -34,6 +34,7 @@ private:
         ~JavaProxy();
 
         void update(const ::textsort::ItemList & items) override;
+        void updateSuper() override;
 
     private:
         friend ::djinni::JniInterface<::textsort::SuperListtener, ::djinni_generated::NativeSuperListtener>;
@@ -41,6 +42,7 @@ private:
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/dropbox/textsort/SuperListtener") };
     const jmethodID method_update { ::djinni::jniGetMethodID(clazz.get(), "update", "(Lcom/dropbox/textsort/ItemList;)V") };
+    const jmethodID method_updateSuper { ::djinni::jniGetMethodID(clazz.get(), "updateSuper", "()V") };
 };
 
 }  // namespace djinni_generated

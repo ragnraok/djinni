@@ -3,11 +3,14 @@
 
 #pragma once
 
+#include "super_super_listener.hpp"
+
 namespace textsort {
 
+class SuperSuperListener;
 struct ItemList;
 
-class SuperListtener {
+class SuperListtener : public SuperSuperListener {
 public:
     virtual ~SuperListtener() {}
 

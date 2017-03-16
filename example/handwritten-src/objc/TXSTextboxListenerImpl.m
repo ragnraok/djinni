@@ -13,16 +13,17 @@
     return self;
 }
 
-- (void)update:(TXSItemList *)items
-{
-    NSString *str = [items.items componentsJoinedByString:@"\n"];
-    _textView.text = str;
-}
-
-//- (void)updateNew:(nonnull TXSItemList *)items
+//- (void)update:(TXSItemList *)items
 //{
 ////    NSString *str = [items.items componentsJoinedByString:@"\n"];
-//    NSLog(@"udpateNew");
+////    _textView.text = str;
+//    NSLog(@"TXSTextboxListenerImpl update");
 //}
+
+- (void)updateNew:(nonnull TXSItemList *)items
+{
+//    NSString *str = [items.items componentsJoinedByString:@"\n"];
+    NSLog(@"TXSTextboxListenerImpl udpateNew");
+}
 
 @end

@@ -3,6 +3,6 @@
 
 package com.dropbox.textsort;
 
-/*package*/ interface SuperListtener extends SuperSuperListener {
-    public void update(ItemList items);
+/*package*/ interface SuperSuperListener {
+    public void updateSuper();
 }
