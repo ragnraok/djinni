@@ -8,6 +8,8 @@
         "jni/djinni_support.cpp",
         "jni/djinni_support.hpp",
         "jni/Marshal.hpp",
+        "jni/djinni_proxy_constructor.hpp",
+        "jni/djinni_proxy_constructor.cpp",
       ],
       "include_dirs": [
         "jni",

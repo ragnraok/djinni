@@ -4,7 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/android.iml" filepath="$PROJECT_DIR$/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/djinnijavagen/djinnijavagen.iml" filepath="$PROJECT_DIR$/djinnijavagen/djinnijavagen.iml" />
+      <module fileurl="file://$PROJECT_DIR$/djinnisupport/djinnisupport.iml" filepath="$PROJECT_DIR$/djinnisupport/djinnisupport.iml" />
     </modules>
   </component>
 </project>
-

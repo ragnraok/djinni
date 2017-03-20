@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.djinni.ConstructProxy;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -25,6 +27,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ConstructProxy.proxyDefaultConstructor(TextboxListenerImpl.class.getName().replace(".", "/"), "textbox_listener");
 
         text = (EditText) findViewById(R.id.editText);
         textboxListener = new TextboxListenerImpl(text);
