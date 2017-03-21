@@ -45,3 +45,9 @@ example/android/.idea/
 example/generated-src/
 
 .vscode/
+
+
+# iml
+example/android/app/app.iml
+example/android/djinnijavagen/djinnijavagen.iml
+example/android/djinnisupport/djinnisupport.iml
