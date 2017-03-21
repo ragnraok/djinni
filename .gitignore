@@ -34,3 +34,14 @@ intellij-plugin/djinni.jar
 
 # profiling output
 callgrind.out.*
+
+
+
+#
+test-suite/
+
+example/android/.idea/
+
+example/generated-src/
+
+.vscode/
