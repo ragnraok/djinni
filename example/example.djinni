@@ -29,3 +29,22 @@ textbox_listener: super_listtener = interface +j +o {
     #update(items: item_list);
     updateNew(items: item_list);
 }
+
+d_view = interface +j +o {
+    setWidth(w: i32);
+    setHeight(h: i32);
+}
+
+d_textView: d_view = interface +j +o {
+    setText(text: string);
+}
+
+dview_helper = interface +j +o {
+    createDTextView(): d_textView;
+}
+
+api_mgr = interface +c {
+    static create_api(
+        dviewhelper:dview_helper, 
+    );
+}
