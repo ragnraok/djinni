@@ -42,9 +42,3 @@ d_textView: d_view = interface +j +o {
 dview_helper = interface +j +o {
     createDTextView(): d_textView;
 }
-
-api_mgr = interface +c {
-    static create_api(
-        dviewhelper:dview_helper, 
-    );
-}
