@@ -11,6 +11,10 @@ public class TextboxListenerImpl extends SuperTextboxListenerImpl implements Tex
 
     private EditText mTextArea;
 
+    public TextboxListenerImpl() {
+        Log.i(TAG, "create TextboxListenerImpl");
+    }
+
     public TextboxListenerImpl(EditText textArea) {
         this.mTextArea = textArea;
     }

@@ -18,10 +18,13 @@
 // app doesn't use JNI except through Djinni.
 
 #include "djinni_support.hpp"
+#include "djinni_proxy_constructor.hpp"
 
 // Called when library is loaded by the first class which uses it.
 CJNIEXPORT jint JNICALL JNI_OnLoad(JavaVM * jvm, void * /*reserved*/) {
     djinni::jniInit(jvm);
+    djinni::register_constructor_proxy_method();
+
     return JNI_VERSION_1_6;
 }
 
