@@ -4,6 +4,7 @@
 #pragma once
 
 #include "super_listtener.hpp"
+#include <memory>
 
 namespace textsort {
 

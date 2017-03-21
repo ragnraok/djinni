@@ -19,6 +19,13 @@
 		65D7FDFD19AD0CDF0038F82F /* TXSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D7FDF919AD0CDF0038F82F /* TXSViewController.m */; };
 		7E6097F41E7A8C1000AE028F /* TXSSuperSuperListenerImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6097F31E7A8C1000AE028F /* TXSSuperSuperListenerImpl.m */; };
 		7ED06C931E7A569F002D728F /* TXSTextboxSuperListenerImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED06C921E7A569F002D728F /* TXSTextboxSuperListenerImpl.m */; };
+		7EDB61541E80D699000A1B52 /* djinni_jni.target.mk in Resources */ = {isa = PBXBuildFile; fileRef = 7EDB61371E80D699000A1B52 /* djinni_jni.target.mk */; };
+		7EDB61581E80D699000A1B52 /* DJIError.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7EDB61421E80D699000A1B52 /* DJIError.mm */; };
+		7EDB61591E80D699000A1B52 /* DJIProxyCaches.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7EDB61451E80D699000A1B52 /* DJIProxyCaches.mm */; };
+		7EDB615A1E80D699000A1B52 /* support-lib.iml in Resources */ = {isa = PBXBuildFile; fileRef = 7EDB61481E80D699000A1B52 /* support-lib.iml */; };
+		7EDB615B1E80D699000A1B52 /* support_lib.gyp in Resources */ = {isa = PBXBuildFile; fileRef = 7EDB61491E80D699000A1B52 /* support_lib.gyp */; };
+		7EDB61711E80DA54000A1B52 /* DJIConstructProxy.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7EDB61701E80DA54000A1B52 /* DJIConstructProxy.mm */; };
+		7EDB61771E80DE0F000A1B52 /* DJIProxyConstructorImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7EDB61751E80DE0F000A1B52 /* DJIProxyConstructorImpl.mm */; };
 		B003051919B70561008E1F67 /* libdjinni_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B003051819B70561008E1F67 /* libdjinni_objc.a */; };
 		B097B6BC19B1C07E0047653A /* libtextsort_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B097B6BB19B1C07E0047653A /* libtextsort_objc.a */; };
 /* End PBXBuildFile section */
@@ -44,6 +51,23 @@
 		7E6097F31E7A8C1000AE028F /* TXSSuperSuperListenerImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXSSuperSuperListenerImpl.m; sourceTree = "<group>"; };
 		7ED06C921E7A569F002D728F /* TXSTextboxSuperListenerImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXSTextboxSuperListenerImpl.m; sourceTree = "<group>"; };
 		7ED06C941E7A57E5002D728F /* TXSTextboxSuperListenerImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXSTextboxSuperListenerImpl.h; sourceTree = "<group>"; };
+		7EDB61361E80D699000A1B52 /* djinni_common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = djinni_common.hpp; sourceTree = "<group>"; };
+		7EDB61371E80D699000A1B52 /* djinni_jni.target.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = djinni_jni.target.mk; sourceTree = "<group>"; };
+		7EDB61401E80D699000A1B52 /* DJICppWrapperCache+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DJICppWrapperCache+Private.h"; sourceTree = "<group>"; };
+		7EDB61411E80D699000A1B52 /* DJIError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIError.h; sourceTree = "<group>"; };
+		7EDB61421E80D699000A1B52 /* DJIError.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DJIError.mm; sourceTree = "<group>"; };
+		7EDB61431E80D699000A1B52 /* DJIMarshal+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DJIMarshal+Private.h"; sourceTree = "<group>"; };
+		7EDB61441E80D699000A1B52 /* DJIObjcWrapperCache+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DJIObjcWrapperCache+Private.h"; sourceTree = "<group>"; };
+		7EDB61451E80D699000A1B52 /* DJIProxyCaches.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DJIProxyCaches.mm; sourceTree = "<group>"; };
+		7EDB61461E80D699000A1B52 /* proxy_cache_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = proxy_cache_impl.hpp; sourceTree = "<group>"; };
+		7EDB61471E80D699000A1B52 /* proxy_cache_interface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = proxy_cache_interface.hpp; sourceTree = "<group>"; };
+		7EDB61481E80D699000A1B52 /* support-lib.iml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "support-lib.iml"; sourceTree = "<group>"; };
+		7EDB61491E80D699000A1B52 /* support_lib.gyp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = support_lib.gyp; sourceTree = "<group>"; };
+		7EDB61651E80D7A0000A1B52 /* DJIConstructProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DJIConstructProxy.h; sourceTree = "<group>"; };
+		7EDB61701E80DA54000A1B52 /* DJIConstructProxy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DJIConstructProxy.mm; sourceTree = "<group>"; };
+		7EDB61751E80DE0F000A1B52 /* DJIProxyConstructorImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DJIProxyConstructorImpl.mm; sourceTree = "<group>"; };
+		7EDB61761E80DE0F000A1B52 /* DJIProxyConstructorImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DJIProxyConstructorImpl.hpp; sourceTree = "<group>"; };
+		7EDB61801E80FECF000A1B52 /* DJIProxyConstructorSupport.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DJIProxyConstructorSupport.hpp; sourceTree = "<group>"; };
 		B003051819B70561008E1F67 /* libdjinni_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_objc.a; path = "../../support-lib/build/Debug-iphoneos/libdjinni_objc.a"; sourceTree = "<group>"; };
 		B097B6BB19B1C07E0047653A /* libtextsort_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtextsort_objc.a; path = "../../build/Debug-iphoneos/libtextsort_objc.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -67,6 +91,7 @@
 		65834DD419AC599E0061AD3F = {
 			isa = PBXGroup;
 			children = (
+				7EDB61251E80D699000A1B52 /* support-lib */,
 				65D7FDF219AD0C730038F82F /* handwritten-objc */,
 				65834DE619AC599E0061AD3F /* TextSort */,
 				65834DDF19AC599E0061AD3F /* Frameworks */,
@@ -133,6 +158,39 @@
 			path = "../handwritten-src/objc";
 			sourceTree = "<group>";
 		};
+		7EDB61251E80D699000A1B52 /* support-lib */ = {
+			isa = PBXGroup;
+			children = (
+				7EDB61361E80D699000A1B52 /* djinni_common.hpp */,
+				7EDB61371E80D699000A1B52 /* djinni_jni.target.mk */,
+				7EDB613F1E80D699000A1B52 /* objc */,
+				7EDB61461E80D699000A1B52 /* proxy_cache_impl.hpp */,
+				7EDB61471E80D699000A1B52 /* proxy_cache_interface.hpp */,
+				7EDB61481E80D699000A1B52 /* support-lib.iml */,
+				7EDB61491E80D699000A1B52 /* support_lib.gyp */,
+			);
+			name = "support-lib";
+			path = "../../support-lib";
+			sourceTree = "<group>";
+		};
+		7EDB613F1E80D699000A1B52 /* objc */ = {
+			isa = PBXGroup;
+			children = (
+				7EDB61751E80DE0F000A1B52 /* DJIProxyConstructorImpl.mm */,
+				7EDB61761E80DE0F000A1B52 /* DJIProxyConstructorImpl.hpp */,
+				7EDB61401E80D699000A1B52 /* DJICppWrapperCache+Private.h */,
+				7EDB61411E80D699000A1B52 /* DJIError.h */,
+				7EDB61421E80D699000A1B52 /* DJIError.mm */,
+				7EDB61431E80D699000A1B52 /* DJIMarshal+Private.h */,
+				7EDB61441E80D699000A1B52 /* DJIObjcWrapperCache+Private.h */,
+				7EDB61451E80D699000A1B52 /* DJIProxyCaches.mm */,
+				7EDB61651E80D7A0000A1B52 /* DJIConstructProxy.h */,
+				7EDB61701E80DA54000A1B52 /* DJIConstructProxy.mm */,
+				7EDB61801E80FECF000A1B52 /* DJIProxyConstructorSupport.hpp */,
+			);
+			path = objc;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -186,8 +244,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EDB615B1E80D699000A1B52 /* support_lib.gyp in Resources */,
 				65834DFC19AC599E0061AD3F /* Images.xcassets in Resources */,
+				7EDB61541E80D699000A1B52 /* djinni_jni.target.mk in Resources */,
 				65834DF419AC599E0061AD3F /* Main_iPhone.storyboard in Resources */,
+				7EDB615A1E80D699000A1B52 /* support-lib.iml in Resources */,
 				65834DEB19AC599E0061AD3F /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -202,8 +263,12 @@
 				65D7FDFC19AD0CDF0038F82F /* TXSTextboxListenerImpl.m in Sources */,
 				65D7FDFB19AD0CDF0038F82F /* TXSAppDelegate.m in Sources */,
 				7ED06C931E7A569F002D728F /* TXSTextboxSuperListenerImpl.m in Sources */,
+				7EDB61771E80DE0F000A1B52 /* DJIProxyConstructorImpl.mm in Sources */,
+				7EDB61591E80D699000A1B52 /* DJIProxyCaches.mm in Sources */,
+				7EDB61581E80D699000A1B52 /* DJIError.mm in Sources */,
 				65D7FDFD19AD0CDF0038F82F /* TXSViewController.m in Sources */,
 				65D7FDFA19AD0CDF0038F82F /* main.mm in Sources */,
+				7EDB61711E80DA54000A1B52 /* DJIConstructProxy.mm in Sources */,
 				7E6097F41E7A8C1000AE028F /* TXSSuperSuperListenerImpl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

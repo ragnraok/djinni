@@ -1,19 +1,35 @@
+#include "textbox_listener.hpp"
+
+#ifdef __ANDROID__
 #include "NativeTextboxListener.hpp"
-#include <android/log.h>
 #include "djinni_proxy_constructor.hpp"
 
 using namespace djinni_generated;
 using namespace djinni;
 
+#define CREATE_PROXY_TEXTBOX_LISTENER_OBJ(PTR) \
+    jobject obj = ProxyConstructorMap::get()->createObject("textbox_listener"); \
+    if (obj) { \
+        PTR = NativeTextboxListener::toCpp(jniGetThreadEnv(), obj); \
+    }
+#endif
+
+
+#ifdef __APPLE__
+#include "TXSTextboxListenerCreator.h"
+#define CREATE_PROXY_TEXTBOX_LISTENER_OBJ(PTR) \
+    PTR = createTextboxListener();
+#endif
+
+#ifndef CREATE_PROXY_TEXTBOX_LISTENER_OBJ
+#define CREATE_PROXY_TEXTBOX_LISTENER_OBJ(PTR)
+#endif
+
+
 namespace textsort {
 
 void TextboxListener::init() {
-    jobject obj = ProxyConstructorMap::get()->createObject("textbox_listener");
-    if (obj) {
-        __android_log_print(ANDROID_LOG_INFO, "TextSort", "create TextboxListener java obj");
-        this->objPtr = NativeTextboxListener::toCpp(jniGetThreadEnv(), obj);
-        __android_log_print(ANDROID_LOG_INFO, "TextSort", "create TextboxListener shared_ptr");
-    }
+    CREATE_PROXY_TEXTBOX_LISTENER_OBJ(this->objPtr);
 }
 
 }

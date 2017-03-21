@@ -21,6 +21,7 @@
             'SDKROOT': 'iphoneos',
             'SUPPORTED_PLATFORMS': 'iphonesimulator iphoneos',
           }
+
         }]
     ],
     'configurations': {

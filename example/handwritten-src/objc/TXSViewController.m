@@ -3,6 +3,7 @@
 #import "TXSTextboxListenerImpl.h"
 #import "TXSViewController.h"
 #import "TXSTextboxListener.h"
+#import "DJIConstructProxy.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -36,6 +37,8 @@
     // Create the Objective-C TXSTextboxListener
     _textboxListener = [[TXSTextboxListenerImpl alloc] initWithUITextView:self.textView];
     _sortItemInterface = [TXSSortItems createWithListener:_textboxListener];
+    
+    [DJIConstructProxy proxyDefaultConstructor:NSStringFromClass([TXSTextboxListenerImpl class]) interfaceName:@"textbox_listener"];
 }
 
 - (IBAction)sort:(id)sender

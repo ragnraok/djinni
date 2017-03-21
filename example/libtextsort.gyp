@@ -6,7 +6,7 @@
             "dependencies": [
               "../support-lib/support_lib.gyp:djinni_jni",
             ],
-            "ldflags": [ "-llog", "-Wl,--build-id,--gc-sections,--exclude-libs,ALL" ],
+            "ldflags": [ "-llog", "-Wl,--build-id,--gc-sections,--exclude-libs,ALL"],
             "sources": [
               "../support-lib/jni/djinni_main.cpp",
               "<!@(python glob.py generated-src/cpp   '*.cpp' '*.hpp')",
