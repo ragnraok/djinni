@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "DJIConstructProxy.h"
-#import "DJIProxyConstructorImpl.hpp"
+#import "DJIProxyConstructorImpl.h"
 
 @implementation DJIConstructProxy
 

@@ -6,7 +6,7 @@
 ////  Copyright © 2017年 Dropbox, Inc. All rights reserved.
 ////
 
-#import "DJIProxyConstructorImpl.hpp"
+#import "DJIProxyConstructorImpl.h"
 
 @implementation DJIProxyConstructorMap
 

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "DJIProxyConstructorImpl.hpp"
+#import "DJIProxyConstructorImpl.h"
 #import "TXSTextboxListenerCreator.h"
 #import "TXSTextboxListener+Private.h"
 
