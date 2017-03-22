@@ -13,8 +13,10 @@
 
 @implementation DJIConstructProxy
 
-+ (void)proxyDefaultConstructor:(NSString*)_classname interfaceName:(NSString*)_interfaceName {
-    [[DJIProxyConstructorMap get] mapConstructor:_classname interface:_interfaceName];
++ (void)proxyDefaultConstructor:(Class)_class interfaceName:(NSString*)_interfaceName {
+    
+    
+    [[DJIProxyConstructorMap get] mapConstructor:NSStringFromClass(_class) interface:_interfaceName];
 }
 
 @end

@@ -38,7 +38,7 @@
     _textboxListener = [[TXSTextboxListenerImpl alloc] initWithUITextView:self.textView];
     _sortItemInterface = [TXSSortItems createWithListener:_textboxListener];
     
-    [DJIConstructProxy proxyDefaultConstructor:NSStringFromClass([TXSTextboxListenerImpl class]) interfaceName:@"textbox_listener"];
+    [DJIConstructProxy proxyDefaultConstructor:[TXSTextboxListenerImpl class] interfaceName:@"textbox_listener"];
 }
 
 - (IBAction)sort:(id)sender

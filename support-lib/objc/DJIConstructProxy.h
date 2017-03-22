@@ -14,6 +14,6 @@
 
 @interface DJIConstructProxy : NSObject
 
-+ (void)proxyDefaultConstructor:(NSString*)_classname interfaceName:(NSString*)_interfaceName;
++ (void)proxyDefaultConstructor:(Class)_class interfaceName:(NSString*)_interfaceName;
 
 @end

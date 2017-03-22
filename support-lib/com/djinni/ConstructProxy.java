@@ -6,6 +6,12 @@ package com.djinni;
 
 public class ConstructProxy {
 
-    public static native void proxyDefaultConstructor(String classname, String interfaceName);
+    public static void proxyDefaultConstructor(Class clazz, String interfaceName) {
+        if (clazz != null && interfaceName != null) {
+            proxyDefaultConstructor(clazz.getName().replace(".", "/"), interfaceName);
+        }
+    }
+
+    private static native void proxyDefaultConstructor(String classname, String interfaceName);
 
 }

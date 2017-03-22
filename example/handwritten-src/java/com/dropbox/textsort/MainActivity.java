@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ConstructProxy.proxyDefaultConstructor(TextboxListenerImpl.class.getName().replace(".", "/"), "textbox_listener");
+        ConstructProxy.proxyDefaultConstructor(TextboxListenerImpl.class, "textbox_listener");
 
         text = (EditText) findViewById(R.id.editText);
         textboxListener = new TextboxListenerImpl(text);
