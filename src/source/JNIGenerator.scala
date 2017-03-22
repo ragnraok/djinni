@@ -386,7 +386,7 @@ class JNIGenerator(spec: Spec) extends Generator(spec) {
     else {
       // Write prototype to .hpp and body to .cpp
       writeJniHppFile(ident, origin, refs.jniHpp, Nil, writeProto)
-      writeJniCppFile(ident, origin, refs.jniCpp, writeBody)
+      writeJniCppFile(ident, origin, refs.jniCpp, None, writeBody)
     }
   }
 

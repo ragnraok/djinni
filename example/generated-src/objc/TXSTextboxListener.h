@@ -5,6 +5,8 @@
 #import "TXSSuperListtener.h"
 #import <Foundation/Foundation.h>
 
+extern int32_t const TXSTextboxListenerVersion;
+extern NSString * __nonnull const TXSTextboxListenerStringtest;
 
 @protocol TXSTextboxListener <TXSSuperListtener>
 

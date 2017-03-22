@@ -5,6 +5,10 @@ import djinni.generatorTools._
 import djinni.meta._
 
 class ObjcMarshal(spec: Spec) extends Marshal(spec) {
+  
+  val constructProxy = "ConstructProxy"
+  val constructProxyHeader = headerName(constructProxy)
+  val constructProxyObjc = idObjc.ty(constructProxy) + "." + spec.objcppExt
 
   override def typename(tm: MExpr): String = {
     val (name, _) = toObjcType(tm)
@@ -164,5 +168,9 @@ class ObjcMarshal(spec: Spec) extends Marshal(spec) {
         case _ => false
       }
     case _ => false
+  }
+  
+  def objcProxyConstructFuncName(name: String) = {
+    s"create${idObjc.ty(name)}"
   }
 }

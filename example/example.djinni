@@ -25,20 +25,23 @@ super_listtener: super_super_listener = interface +j +o {
     update(items: item_list);
 }
 
-textbox_listener: super_listtener = interface +j +o {
+textbox_listener: super_listtener = interface +j +o +proxy {
     #update(items: item_list);
     updateNew(items: item_list);
+
+    const version: i32 = 1;
+    const stringtest: string = "123123";
 }
 
-d_view = interface +j +o {
+d_view = interface +j +o +proxy {
     setWidth(w: i32);
     setHeight(h: i32);
 }
 
-d_textView: d_view = interface +j +o {
+d_textView: d_view = interface +j +o +proxy {
     setText(text: string);
 }
 
-dview_helper = interface +j +o {
+dview_helper = interface +j +o +proxy {
     createDTextView(): d_textView;
 }

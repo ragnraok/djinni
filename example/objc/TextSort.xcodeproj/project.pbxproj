@@ -65,7 +65,7 @@
 		7EDB61491E80D699000A1B52 /* support_lib.gyp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = support_lib.gyp; sourceTree = "<group>"; };
 		7EDB61651E80D7A0000A1B52 /* DJIConstructProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DJIConstructProxy.h; sourceTree = "<group>"; };
 		7EDB61701E80DA54000A1B52 /* DJIConstructProxy.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DJIConstructProxy.mm; sourceTree = "<group>"; };
-		7EDB61751E80DE0F000A1B52 /* DJIProxyConstructorImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DJIProxyConstructorImpl.mm; sourceTree = "<group>"; };
+		7EDB61751E80DE0F000A1B52 /* DJIProxyConstructorImpl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DJIProxyConstructorImpl.mm; path = objc/DJIProxyConstructorImpl.mm; sourceTree = "<group>"; };
 		7EDB61761E80DE0F000A1B52 /* DJIProxyConstructorImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIProxyConstructorImpl.h; sourceTree = "<group>"; };
 		B003051819B70561008E1F67 /* libdjinni_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdjinni_objc.a; path = "../../support-lib/build/Debug-iphoneos/libdjinni_objc.a"; sourceTree = "<group>"; };
 		B097B6BB19B1C07E0047653A /* libtextsort_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtextsort_objc.a; path = "../../build/Debug-iphoneos/libtextsort_objc.a"; sourceTree = "<group>"; };
@@ -160,6 +160,7 @@
 		7EDB61251E80D699000A1B52 /* support-lib */ = {
 			isa = PBXGroup;
 			children = (
+				7EDB61751E80DE0F000A1B52 /* DJIProxyConstructorImpl.mm */,
 				7EDB61361E80D699000A1B52 /* djinni_common.hpp */,
 				7EDB61371E80D699000A1B52 /* djinni_jni.target.mk */,
 				7EDB613F1E80D699000A1B52 /* objc */,
@@ -175,7 +176,6 @@
 		7EDB613F1E80D699000A1B52 /* objc */ = {
 			isa = PBXGroup;
 			children = (
-				7EDB61751E80DE0F000A1B52 /* DJIProxyConstructorImpl.mm */,
 				7EDB61761E80DE0F000A1B52 /* DJIProxyConstructorImpl.h */,
 				7EDB61401E80D699000A1B52 /* DJICppWrapperCache+Private.h */,
 				7EDB61411E80D699000A1B52 /* DJIError.h */,

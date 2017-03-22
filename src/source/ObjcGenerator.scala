@@ -27,7 +27,10 @@ import scala.collection.mutable
 import scala.collection.parallel.immutable
 
 class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
-
+  
+  val cppMarshal = new CppMarshal(spec)
+  val objcCppMarshal = new ObjcppMarshal(spec)
+  
   class ObjcRefs() {
     var body = mutable.TreeSet[String]()
     var header = mutable.TreeSet[String]()
@@ -40,6 +43,27 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
     def find(m: Meta) = for(r <- marshal.references(m)) r match {
       case ImportRef(arg) => header.add("#import " + arg)
       case DeclRef(decl, _) => header.add(decl)
+    }
+  }
+
+  override def generate(idl: Seq[TypeDecl]) {
+    val proxyInterfaces = mutable.ArrayBuffer.empty[TypeDecl]
+    for (td <- idl.collect { case itd: InternTypeDecl => itd }) td.body match {
+      case e: Enum =>
+        assert(td.params.isEmpty)
+        generateEnum(td.origin, td.ident, td.doc, e)
+      case r: Record => generateRecord(td.origin, td.ident, td.doc, td.params, r)
+      case i: Interface => {
+        i.ext.proxy match {
+          case true => proxyInterfaces.+=(td)
+          case _ => //   
+        }
+        generateInterface(td.origin, td.ident, td.doc, td.params, i)
+      }
+    }
+    if (proxyInterfaces.nonEmpty) {
+      println(s"proxy constructor interfaces number: ${proxyInterfaces.size}")
+      generateInterfaceProxyConstructor(proxyInterfaces)
     }
   }
 
@@ -91,9 +115,9 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
     var inhertLiter = ""
     i.parent match {
       case Some(supertype) => {
-        var superincludefilename = marshal.headerName(supertype.expr.ident.name)
+        val superincludefilename = marshal.headerName(supertype.expr.ident.name)
         refs.header.add("#import \"" + superincludefilename + "\"")
-        var supertypename = marshal.typename(supertype.expr.ident.name)
+        val supertypename = marshal.typename(supertype.expr.ident.name)
         inhertLiter = s" <$supertypename>"
       }
       case _ =>   
@@ -426,5 +450,46 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
       }
       f(w)
     })
+  }
+
+  def generateInterfaceProxyConstructor(interfaces: mutable.ArrayBuffer[TypeDecl]) = {
+    if (interfaces.nonEmpty) {
+      
+      val headerRefs = new ObjcRefs()
+      headerRefs.header.add("#include <memory>")
+      
+      for (td <- interfaces) {
+//        println(cppMarshal.include(td.ident.name))
+        headerRefs.header.add(s"#include ${cppMarshal.include(td.ident.name)}")
+      }
+      
+      writeObjcFile(marshal.constructProxyHeader, "", headerRefs.header, w => {
+        for (td <- interfaces) {
+          w.wl(s"std::shared_ptr<::${spec.cppNamespace}::${cppMarshal.typename(td.ident.name)}> ${marshal.objcProxyConstructFuncName(td.ident.name)}();")
+        }
+      })
+      
+      val implRefs = new ObjcRefs()
+      implRefs.header.add("#import <Foundation/Foundation.h>")
+      implRefs.header.add("#import \"DJIProxyConstructorImpl.h\"")
+      
+      implRefs.header.add(s"#import ${marshal.include(marshal.constructProxy)}")
+      
+      for (td <- interfaces) {
+        implRefs.header.add("#import " + "\"" + objcCppMarshal.privateHeaderName(td.ident.name) + "\"")
+      }
+      
+      writeObjcFile(marshal.constructProxyObjc, "", implRefs.header, w => {
+        for (td <- interfaces) {
+          w.wl(s"std::shared_ptr<::${spec.cppNamespace}::${cppMarshal.typename(td.ident.name)}> ${marshal.objcProxyConstructFuncName(td.ident.name)}() {")
+          w.increase()
+          w.wl(s"id<${marshal.typename(td.ident.name)}> obj = [[DJIProxyConstructorMap get] createObject:@" + "\"" + td.ident.name + "\"" +  "];")
+          w.wl(s"return ::${spec.objcppNamespace}::${objcCppMarshal.helperClass(td.ident.name)}::toCpp(obj);")
+          w.decrease()
+          w.wl("}")
+          w.wl
+        }
+      })
+    }
   }
 }

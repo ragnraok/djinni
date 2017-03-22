@@ -16,6 +16,8 @@
 
 package djinni
 
+import java.io.StringWriter
+
 import djinni.ast.Record.DerivingType
 import djinni.ast._
 import djinni.generatorTools._
@@ -27,6 +29,8 @@ import scala.collection.mutable
 class CppGenerator(spec: Spec) extends Generator(spec) {
 
   val marshal = new CppMarshal(spec)
+  val jniMarshal = new JNIMarshal(spec)
+  val objcMarshal = new ObjcMarshal(spec)
 
   val writeCppFile = writeCppFileGeneric(spec.cppOutFolder.get, spec.cppNamespace, spec.cppFileIdentStyle, spec.cppIncludePrefix) _
   def writeHppFile(name: String, origin: String, includes: Iterable[String], fwds: Iterable[String], f: IndentWriter => Unit, f2: IndentWriter => Unit = (w => {})) =
@@ -211,7 +215,7 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
     writeHppFile(cppName, origin, refs.hpp, refs.hppFwds, writeCppPrototype)
 
     if (r.consts.nonEmpty || r.derivingTypes.nonEmpty) {
-      writeCppFile(cppName, origin, refs.cpp, w => {
+      writeCppFile(cppName, origin, refs.cpp, None, w => {
         generateCppConstants(w, r.consts, actualSelf)
 
         if (r.derivingTypes.contains(DerivingType.Eq)) {
@@ -289,6 +293,10 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
       }
     }
     
+    if (i.ext.proxy) {
+      refs.hpp.add("#include <memory>")
+    }
+    
     val methodNamesInScope = i.methods.map(m => idCpp.method(m.ident))
 
     writeHppFile(ident, origin, refs.hpp, refs.hppFwds, w => {
@@ -296,33 +304,138 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
       writeCppTypeParams(w, typeParams)
       w.w(s"class $self$superclassLiter").bracedSemi {
         w.wlOutdent("public:")
+        if (i.ext.proxy) {
+          // Default Constructor
+          w.wl(s"$self() {}")
+        }
         // Destructor
-        w.wl(s"virtual ~$self() {}")
+        if (i.ext.proxy) {
+          w.wl(s"virtual ~$self() { this->_objPtr.reset(); }")
+        } else {
+          w.wl(s"virtual ~$self() {}")
+        }
         // Constants
         generateHppConstants(w, i.consts)
         // Methods
-        for (m <- i.methods) {
+        var allMethod = i.methods;
+        if (i.ext.proxy) {
+          allMethod = Seq.concat[Interface.Method](i.methods, i.superMethods);
+        }
+        for (m <- allMethod) {
           w.wl
           writeDoc(w, m.doc)
           val ret = marshal.returnType(m.ret, methodNamesInScope)
           val params = m.params.map(p => marshal.paramType(p.ty, methodNamesInScope) + " " + idCpp.local(p.ident))
+          val methodCallParams = m.params.map(p => idCpp.local(p.ident))
           if (m.static) {
             w.wl(s"static $ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")};")
           } else {
             val constFlag = if (m.const) " const" else ""
-            w.wl(s"virtual $ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")}$constFlag {}")
+            if (i.ext.proxy) {
+              w.wl(s"virtual $ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")}$constFlag {")
+              w.increase()
+              w.wl("if (this->_objPtr) {")
+              w.increase()
+              if (ret.equals("void")) {
+                w.wl(s"this->_objPtr->${idCpp.method(m.ident)}${methodCallParams.mkString("(", ", ", ")")};")
+              } else {
+                w.wl(s"return this->_objPtr->${idCpp.method(m.ident)}${methodCallParams.mkString("(", ", ", ")")};")
+              }
+              w.decrease()
+              w.wl("}")
+              w.decrease()
+              w.wl("}")
+            } else {
+              w.wl(s"virtual $ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")}$constFlag {}")
+            }
           }
+        }
+        if (i.ext.proxy) {
+          w.wl(s"static $self create() {")
+          w.increase()
+          w.wl(s"return $self(true);")
+          w.decrease()
+          w.wl("}")
+        }
+        if (i.ext.proxy) {
+          w.wlOutdent("private:")
+          w.wl(s"void init();")
+          w.wl(s"std::shared_ptr<$self> _objPtr;")
+          w.wl(s"$self(bool _fromCpp) {")
+          w.increase()
+          w.wl("if (_fromCpp) {")
+          w.increase()
+          w.wl("init();")
+          w.decrease()
+          w.wl("}")
+          w.decrease()
+          w.wl("}")
         }
       }
     })
 
     // Cpp only generated in need of Constants
-    if (i.consts.nonEmpty) {
-      writeCppFile(ident, origin, refs.cpp, w => {
+    if (i.consts.nonEmpty || i.ext.proxy) {
+      val beforeNamespace = i.ext.proxy match {
+        case true => generateBeforeNamespaceIncludeForProxy(ident, self)
+        case _ => None  
+      }
+      writeCppFile(ident, origin, refs.cpp, beforeNamespace, w => {
+        generateCppProxyConstructor(w, ident, self)
         generateCppConstants(w, i.consts, self)
       })
     }
 
+  }
+  
+  def generateBeforeNamespaceIncludeForProxy(ident: Ident, selfName: String) = {
+    val stringWriter = new StringWriter
+    
+    // ANDROID
+    val w = new IndentWriter(stringWriter)
+    w.wl("#ifdef __ANDROID__")
+    val jniClassName = jniMarshal.helperClass(ident)
+    w.wl("#include " + "\"" +  jniClassName + "." + spec.cppHeaderExt + "\"")
+    w.wl("#include \"djinni_proxy_constructor.hpp\"")
+    w.wl
+    w.wl("#define CREATE_PROXY_OBJC(PTR) \\")
+    w.increase()
+    w.wl(s"jobject obj = ::djinni::ProxyConstructorMap::get()->createObject(" + "\"" + ident.name + "\"" + "); \\")
+    w.wl("if (obj) { \\")
+    w.increase()
+    w.wl(s"PTR = ::${spec.jniNamespace}::$jniClassName::toCpp(::djinni::jniGetThreadEnv(), obj); \\")
+    w.decrease()
+    w.wl("}")
+    w.decrease()
+    w.wl("#endif")
+    
+    w.wl
+    
+    // IOS
+    w.wl("#ifdef __APPLE__")
+    w.wl("#include " + "\"" + spec.objcIncludePrefix + objcMarshal.constructProxyHeader + "\"")
+    w.wl("#define CREATE_PROXY_OBJC(PTR) \\")
+    w.increase()
+    w.wl(s"PTR = ${objcMarshal.objcProxyConstructFuncName(ident.name)}();")
+    w.decrease()
+    w.wl("#endif")
+    
+    w.wl
+    w.wl("#ifndef CREATE_PROXY_OBJC")
+    w.wl("#define CREATE_PROXY_OBJC(PTR)")
+    w.wl("#endif")
+    
+    Some(stringWriter.toString)
+  }
+
+
+  def generateCppProxyConstructor(w: IndentWriter, ident: Ident, selfName: String) = {
+    w.wl(s"void $selfName::init() {")
+    w.increase()
+    w.wl("CREATE_PROXY_OBJC(this->_objPtr);")
+    w.decrease()
+    w.wl("}")
+    w.wl
   }
 
   def writeCppTypeParams(w: IndentWriter, params: Seq[TypeParam]) {

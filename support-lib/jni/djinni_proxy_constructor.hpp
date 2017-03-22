@@ -11,9 +11,9 @@ class JavaWeakRef;
 class ProxyConstructorMap {
 public:
     static ProxyConstructorMap* get() {
-        if (instance == NULL) {
-            instance = new ProxyConstructorMap();
-        }
+        // if (instance == NULL) {
+        //     instance = new ProxyConstructorMap();
+        // }
         return instance;
     }
 

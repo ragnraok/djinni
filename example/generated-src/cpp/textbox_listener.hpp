@@ -4,7 +4,9 @@
 #pragma once
 
 #include "super_listtener.hpp"
+#include <cstdint>
 #include <memory>
+#include <string>
 
 namespace textsort {
 
@@ -14,25 +16,38 @@ struct ItemList;
 class TextboxListener : public SuperListtener {
 public:
     TextboxListener() {}
-    virtual ~TextboxListener() {
-        this->objPtr.reset();
-    }
+    virtual ~TextboxListener() { this->_objPtr.reset(); }
+
+    static int32_t const VERSION;
+
+    static std::string const STRINGTEST;
 
     /**update(items: item_list); */
     virtual void updateNew(const ItemList & items) {
-        if (this->objPtr) {
-            this->objPtr->updateNew(items);
+        if (this->_objPtr) {
+            this->_objPtr->updateNew(items);
         }
     }
 
+    virtual void updateSuper() {
+        if (this->_objPtr) {
+            this->_objPtr->updateSuper();
+        }
+    }
+
+    virtual void update(const ItemList & items) {
+        if (this->_objPtr) {
+            this->_objPtr->update(items);
+        }
+    }
     static TextboxListener create() {
         return TextboxListener(true);
     }
 private:
     void init();
-    std::shared_ptr<TextboxListener> objPtr;
-    TextboxListener(bool fromNative) {
-        if (fromNative) {
+    std::shared_ptr<TextboxListener> _objPtr;
+    TextboxListener(bool _fromCpp) {
+        if (_fromCpp) {
             init();
         }
     }

@@ -48,7 +48,7 @@
         "objc/DJIProxyConstructorImpl.h",
         "objc/DJIProxyConstructorImpl.mm",
         "objc/DJIConstructProxy.h",
-        "objc/DJIConstructProxy.mm",,
+        "objc/DJIConstructProxy.mm",
         "proxy_cache_impl.hpp",
         "proxy_cache_interface.hpp",
       ],

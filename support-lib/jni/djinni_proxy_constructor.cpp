@@ -1,7 +1,7 @@
 #include "djinni_proxy_constructor.hpp"
 
 namespace djinni {
-    ProxyConstructorMap* ProxyConstructorMap::instance = NULL;
+    ProxyConstructorMap* ProxyConstructorMap::instance = new ProxyConstructorMap();
 
     void ProxyConstructorMap::mapConstructor(const char* classname, const char* interfaceName) {
         if (!classname || !interfaceName) {

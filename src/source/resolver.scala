@@ -103,7 +103,7 @@ def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
         scope = scope.updated(typeParam.ident.name, MParam(typeParam.ident.name))
       }
 
-      resolve(scope, typeDecl.body, typeDecl.parent)
+      resolve(scope, typeDecl, typeDecl.parent)
     }
 
     for (typeDecl <- idl) {
@@ -117,10 +117,15 @@ def resolve(metas: Scope, idl: Seq[TypeDecl]): Option[Error] = {
   None
 }
 
-private def resolve(scope: Scope, typeDef: TypeDef, parent: Option[TypeRef]) {
-  typeDef match {
+private def resolve(scope: Scope, typeDecl: TypeDecl, parent: Option[TypeRef]) {
+  typeDecl.body match {
     case e: Enum => resolveEnum(scope, e)
-    case r: Record => resolveRecord(scope, r)
+    case r: Record => {
+      if (r.ext.proxy) {
+        throw Error(typeDecl.ident.loc, "Record cannot proxy constructor!").toException
+      }
+      resolveRecord(scope, r)
+    }
     case i: Interface => resolveInterface(scope, i, parent)
   }
 }

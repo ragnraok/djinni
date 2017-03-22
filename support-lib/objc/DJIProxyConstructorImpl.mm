@@ -10,8 +10,9 @@
 
 @implementation DJIProxyConstructorMap
 
+static DJIProxyConstructorMap* instance = nil;
+
 +(instancetype)get {
-    static DJIProxyConstructorMap* instance = nil;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         instance = [[self alloc] init];
