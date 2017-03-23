@@ -11,9 +11,13 @@
 
 //#import "DJIProxyConstructorSupport.hpp"
 
-@interface DJIProxyConstructorMap : NSObject
+@interface DJIProxyConstructorMap : NSObject {
+    @private
+    NSObject* lockToken;
+}
 
 @property NSMapTable* interfaceClassMapping;
+
 
 -(void) mapConstructor:(NSString*)classname interface:(NSString*)interfaceName;
 

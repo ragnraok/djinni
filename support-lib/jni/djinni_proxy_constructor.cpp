@@ -7,6 +7,7 @@ namespace djinni {
         if (!classname || !interfaceName) {
             return;
         }
+        std::unique_lock<std::mutex> lock(_mutex);
         jclass obj_class = jniGetThreadEnv()->FindClass(classname);
         if (obj_class) {
             obj_class = (jclass)jniGetThreadEnv()->NewGlobalRef(obj_class);
@@ -18,6 +19,7 @@ namespace djinni {
     }
 
     jobject ProxyConstructorMap::createObject(const char* interfaceName) {
+        std::unique_lock<std::mutex> lock(_mutex);
         auto it = constructorMap.find(std::string(interfaceName));
         if (it != constructorMap.end()) {
             jclass obj_class = it->second.first;

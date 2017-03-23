@@ -17,6 +17,8 @@ public:
     jobject createObject(const char* interfaceName);
 private:
     std::unordered_map<std::string, std::pair<jclass, jmethodID>> constructorMap; // interfaceName->(class, creatorMethod)
+    std::mutex _mutex;
+
     ProxyConstructorMap() {}
     ~ProxyConstructorMap() {
         constructorMap.clear();

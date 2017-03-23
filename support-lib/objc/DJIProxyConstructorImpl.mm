@@ -24,6 +24,7 @@ static DJIProxyConstructorMap* instance = nil;
     self = [super init];
 
     self.interfaceClassMapping = [NSMapTable mapTableWithKeyOptions:NSMapTableCopyIn valueOptions:NSMapTableStrongMemory];
+    lockToken = [[NSObject alloc] init];
 
     return self;
 }
@@ -32,16 +33,20 @@ static DJIProxyConstructorMap* instance = nil;
     if (classname == nil || interfaceName == nil || [classname length] == 0 || [interfaceName length] == 0) {
         return;
     }
-    Class cls = NSClassFromString(classname);
-    if (cls != nil) {
-        [self.interfaceClassMapping setObject:cls forKey:interfaceName];
+    @synchronized (lockToken) {
+        Class cls = NSClassFromString(classname);
+        if (cls != nil) {
+            [self.interfaceClassMapping setObject:cls forKey:interfaceName];
+        }
     }
 }
 
 -(id) createObject:(NSString*)interfaceName {
-    Class clz = [self.interfaceClassMapping objectForKey:interfaceName];
-    if (clz != nil) {
-        return [[clz alloc] init];
+    @synchronized (lockToken) {
+        Class clz = [self.interfaceClassMapping objectForKey:interfaceName];
+        if (clz != nil) {
+            return [[clz alloc] init];
+        }
     }
     return nil;
 }
