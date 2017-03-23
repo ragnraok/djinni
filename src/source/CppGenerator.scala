@@ -377,7 +377,7 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
     // Cpp only generated in need of Constants
     if (i.consts.nonEmpty || i.ext.proxy) {
       val beforeNamespace = i.ext.proxy match {
-        case true => generateBeforeNamespaceIncludeForProxy(ident, self)
+        case true => generateBeforeNamespaceIncludeForProxy(ident, self, i)
         case _ => None  
       }
       writeCppFile(ident, origin, refs.cpp, beforeNamespace, w => {
@@ -388,37 +388,41 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
 
   }
   
-  def generateBeforeNamespaceIncludeForProxy(ident: Ident, selfName: String) = {
+  def generateBeforeNamespaceIncludeForProxy(ident: Ident, selfName: String, i: Interface) = {
     val stringWriter = new StringWriter
     
-    // ANDROID
     val w = new IndentWriter(stringWriter)
-    w.wl("#ifdef __ANDROID__")
-    val jniClassName = jniMarshal.helperClass(ident)
-    w.wl("#include " + "\"" +  jniClassName + "." + spec.cppHeaderExt + "\"")
-    w.wl("#include \"djinni_proxy_constructor.hpp\"")
-    w.wl
-    w.wl("#define CREATE_PROXY_OBJC(PTR) \\")
-    w.increase()
-    w.wl(s"jobject obj = ::djinni::ProxyConstructorMap::get()->createObject(" + "\"" + ident.name + "\"" + "); \\")
-    w.wl("if (obj) { \\")
-    w.increase()
-    w.wl(s"PTR = ::${spec.jniNamespace}::$jniClassName::toCpp(::djinni::jniGetThreadEnv(), obj); \\")
-    w.decrease()
-    w.wl("}")
-    w.decrease()
-    w.wl("#endif")
-    
-    w.wl
+    // ANDROID
+    if (i.ext.java) {
+      w.wl("#ifdef __ANDROID__")
+      val jniClassName = jniMarshal.helperClass(ident)
+      w.wl("#include " + "\"" + jniClassName + "." + spec.cppHeaderExt + "\"")
+      w.wl("#include \"djinni_proxy_constructor.hpp\"")
+      w.wl
+      w.wl("#define CREATE_PROXY_OBJC(PTR) \\")
+      w.increase()
+      w.wl(s"jobject obj = ::djinni::ProxyConstructorMap::get()->createObject(" + "\"" + ident.name + "\"" + "); \\")
+      w.wl("if (obj) { \\")
+      w.increase()
+      w.wl(s"PTR = ::${spec.jniNamespace}::$jniClassName::toCpp(::djinni::jniGetThreadEnv(), obj); \\")
+      w.decrease()
+      w.wl("}")
+      w.decrease()
+      w.wl("#endif")
+
+      w.wl
+    }
     
     // IOS
-    w.wl("#ifdef __APPLE__")
-    w.wl("#include " + "\"" + spec.objcIncludePrefix + objcMarshal.constructProxyHeader + "\"")
-    w.wl("#define CREATE_PROXY_OBJC(PTR) \\")
-    w.increase()
-    w.wl(s"PTR = ${objcMarshal.objcProxyConstructFuncName(ident.name)}();")
-    w.decrease()
-    w.wl("#endif")
+    if (i.ext.objc) {
+      w.wl("#ifdef __APPLE__")
+      w.wl("#include " + "\"" + spec.objcIncludePrefix + objcMarshal.constructProxyHeader + "\"")
+      w.wl("#define CREATE_PROXY_OBJC(PTR) \\")
+      w.increase()
+      w.wl(s"PTR = ${objcMarshal.objcProxyConstructFuncName(ident.name)}();")
+      w.decrease()
+      w.wl("#endif")
+    }
     
     w.wl
     w.wl("#ifndef CREATE_PROXY_OBJC")
