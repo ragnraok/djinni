@@ -294,7 +294,7 @@ ConstructProxy.proxyDefaultConstructor(MyInterface.class, "my_interface");
 Finally in your C++ code, you can directly create the object by this:
 
 ```C++
-my_interface inter = my_interface::create();
+MyInterface inter = MyInterface::create();
 ```
 
 be sure to add support-lib as an dependency in your project
