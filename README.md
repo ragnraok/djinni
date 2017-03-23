@@ -1,3 +1,5 @@
+### A fork version of drop djinni, add support for default constructor proxy and interface inheritance for java/objc implemented interface
+
 # Djinni
 
 Djinni is a tool for generating cross-language type declarations and interface bindings. It's
@@ -76,6 +78,16 @@ Djinni's input is an interface description file. Here's an example:
     # This interface will be implemented in Java and ObjC and can be called from C++.
     my_client_interface = interface +j +o {
         log_string(str: string): bool;
+    }
+    
+    # This interface is inherit from super_interface, which is only available for Objc/Java implemented interfaces
+    my_interface: super_interface +j +o {
+    	foobar(): bool;
+    }
+    
+    # proxy the default constructor for Objc/Java implemented interface, it means that you can create object directly from C++
+    my_interface +j +o +proxy {
+    	foobar(): bool;
     }
 
 Djinni files can also include each other. Adding the line:
@@ -261,6 +273,31 @@ interface/record prefixed. Example:
 
 will be `RecordWithConst::CONST_VALUE` in C++, `RecordWithConst.CONST_VALUE` in Java, and
 `RecordWithConstConstValue` in Objective-C.
+
+### Default Constructor Proxy
+Only Objc/Java implemented interfaces support default constructor proxy, for example:
+
+	my_interface = interface +j +o +proxy {
+		foobar(): bool
+	}
+
+And in your handwriiten Java/Obj code, you need to manually specific the implemented class:
+
+```Java
+ConstructProxy.proxyDefaultConstructor(MyInterface.class, "my_interface");
+```	
+
+```objc
+[DJIConstructProxy proxyDefaultConstructor:[MyInterface class] interfaceName:@"my_interface"];
+```
+
+Finally in your C++ code, you can directly create the object by this:
+
+```C++
+my_interface inter = my_interface::create();
+```
+
+be sure to add support-lib as an dependency in your project
 
 ## Modularization and Library Support
 When generating the interface for your project and wish to make it available to other users
