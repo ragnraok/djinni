@@ -312,12 +312,12 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
         if (i.ext.proxy) {
           w.wl(s"virtual ~$self() { this->_objPtr.reset(); }")
         } else {
-          w.wl(s"virtual ~$self();")
+          w.wl(s"virtual ~$self() {}")
         }
         // Constants
         generateHppConstants(w, i.consts)
         // Methods
-        var allMethod = i.methods;
+        var allMethod = i.methods
         if (i.ext.proxy) {
           allMethod = Seq.concat[Interface.Method](i.methods, i.superMethods);
         }
@@ -346,7 +346,7 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
               w.decrease()
               w.wl("}")
             } else {
-              w.wl(s"virtual $ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")}$constFlag;")
+              w.wl(s"virtual $ret ${idCpp.method(m.ident)}${params.mkString("(", ", ", ")")}$constFlag = 0;")
             }
           }
         }
