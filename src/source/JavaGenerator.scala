@@ -234,18 +234,30 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
 
     val javaName = if (r.ext.java) (ident.name + "_base") else ident.name
     val javaFinal = if (!r.ext.java && spec.javaUseFinalForRecord) "final " else ""
+    
+    if (r.derivingTypes.contains(DerivingType.Parcel)) {
+      refs.java.add("android.os.Parcel");
+      refs.java.add("android.os.Parcelable");
+    }
 
     writeJavaFile(javaName, origin, refs.java, w => {
       writeDoc(w, doc)
 //      javaAnnotationHeader.foreach(w.wl)
       val self = marshal.typename(javaName, r)
 
-      val comparableFlag =
+      var comparableFlag =
         if (r.derivingTypes.contains(DerivingType.Ord)) {
           s" implements Comparable<$self>"
         } else {
           ""
         }
+      if (r.derivingTypes.contains(DerivingType.Parcel)) {
+        if (comparableFlag.isEmpty) {
+          comparableFlag = " implements Parcelable"
+        } else {
+          comparableFlag += ", Parcelable"
+        }
+      }
       w.w(s"${javaClassAccessModifierString}${javaFinal}class ${self + javaTypeParams(params)}$comparableFlag").braced {
         w.wl
         generateJavaConstants(w, r.consts)
@@ -272,6 +284,140 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
           }
         }
         w.wl("}")
+        
+        if (r.derivingTypes.contains(DerivingType.Parcel)) {
+          // Parcel constructor
+          w.wl
+          w.wl(s"public $self(Parcel in) {");
+          w.nested {
+            for (f <- r.fields) {
+              val typename = marshal.typename(f.ty);
+              var isByteArray = false
+              var needClassLoader = false
+              var isShort = false
+              var isBool = false
+              val parcelTypename = {
+                typename match {
+                  case "byte" | "int" | "long" | "float" | "double" | "String" => typename.charAt(0).toUpper + typename.substring(1)
+                  case "boolean" => {
+                    isBool = true
+                    ""
+                  }
+                  case "short" =>  {
+                    isShort = true
+                    "Int"
+                  }
+                  case "byte[]" =>  {
+                    isByteArray = true
+                    "ByteArray"
+                  }  
+                  case _ => {
+                    if (typename.startsWith("ArrayList")) {
+                      needClassLoader = true
+                      "ArrayList"
+                    } else if (typename.startsWith("HashMap")) {
+                      needClassLoader = true
+                      "HashMap"
+                    } else {
+                      needClassLoader = true
+                      "Parcelable"
+                    }
+                  }
+                }
+              }
+              
+              if (isByteArray) {
+                w.wl("int len = in.readInt();")
+                w.wl(s"this.${idJava.field(f.ident)} = new byte[len];")
+                w.wl(s"in.read$parcelTypename(${idJava.field(f.ident)});")
+              } else if (needClassLoader) {
+                w.wl(s"this.${idJava.field(f.ident)} = in.read$parcelTypename(getClass().getClassLoader());")
+              } else if (isShort) {
+                w.wl(s"this.${idJava.field(f.ident)} = (short)in.read$parcelTypename();")
+              } else if (isBool) {
+                w.wl(s"this.${idJava.field(f.ident)} = in.readByte() != 0;")
+              } else {
+                w.wl(s"this.${idJava.field(f.ident)} = in.read$parcelTypename();")
+              }
+              
+            }
+          }
+          w.wl("}")
+          
+          // describeContents
+          w.wl
+          w.wl("@Override")
+          w.wl("public int describeContents() { return 0; }")
+          w.wl
+          
+          // writeToParcel
+          w.wl
+          w.wl("@Override")
+          w.wl("public void writeToParcel(Parcel dest, int flags) {")
+          w.nested {
+            for (f <- r.fields) {
+              val typename = marshal.typename(f.ty);
+              var isByteArray = false
+              var isParcelable = false
+              var isShort = false
+              var isBool = false
+              val parcelTypename = {
+                typename match {
+                  case "byte" | "int" | "long" | "float" | "double" | "String" => typename.charAt(0).toUpper + typename.substring(1)
+                  case "boolean" => {
+                    isBool = true
+                    ""
+                  }
+                  case "short" => {
+                    isShort = true
+                    "Int"
+                  }
+                  case "byte[]" =>  {
+                    isByteArray = true
+                    "ByteArray"
+                  }
+                  case _ => {
+                    if (typename.startsWith("ArrayList")) {
+                      "List"
+                    } else if (typename.startsWith("HashMap")) {
+                      "Map"
+                    } else {
+                      isParcelable = true
+                      "Parcelable"
+                    }
+                  }
+                }
+              }
+              if (isByteArray) {
+                w.wl(s"dest.writeInt(${idJava.field(f.ident)}.length);")
+                w.wl(s"dest.write$parcelTypename(${idJava.field(f.ident)});")
+              } else if (isParcelable) {
+                w.wl(s"dest.write$parcelTypename(${idJava.field(f.ident)}, 0);")
+              } else if (isShort) {
+                w.wl(s"dest.writeInt((int)${idJava.field(f.ident)});")
+              } else if (isBool) {
+                w.wl(s"dest.writeByte((byte) (${idJava.field(f.ident)} ? 1 : 0));")
+              } else {
+                w.wl(s"dest.write$parcelTypename(${idJava.field(f.ident)});")
+              }
+
+            }
+          }
+
+          w.wl("}")
+          
+          // CREATOR
+          w.wl
+          w.wl(s"public static final Creator<$self> CREATOR = new Creator<$self>() {")
+          w.nested {
+            w.wl("@Override")
+            w.wl(s"public $self createFromParcel(Parcel in) { return new $self(in); }")
+            w.wl
+            w.wl("@Override")
+            w.wl(s"public $self[] newArray(int size) { return new $self[size]; }")
+          }
+          w.wl("};")
+        }
 
         // Accessors
         for (f <- r.fields) {
