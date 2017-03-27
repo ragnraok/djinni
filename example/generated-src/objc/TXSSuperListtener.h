@@ -6,7 +6,7 @@
 #import <Foundation/Foundation.h>
 
 
-@protocol TXSSuperListtener <TXSSuperSuperListener>
+@interface TXSSuperListtener : NSObject
 
 - (void)update:(nonnull TXSItemList *)items;
 

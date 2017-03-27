@@ -6,7 +6,7 @@
 
 static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for this file");
 
-@protocol TXSSuperListtener;
+@class TXSSuperListtener;
 
 namespace djinni_generated {
 
@@ -15,7 +15,7 @@ class SuperListtener
 public:
     using CppType = std::shared_ptr<::textsort::SuperListtener>;
     using CppOptType = std::shared_ptr<::textsort::SuperListtener>;
-    using ObjcType = id<TXSSuperListtener>;
+    using ObjcType = TXSSuperListtener*;
 
     using Boxed = SuperListtener;
 

@@ -1,6 +1,20 @@
 item_list = record {
     items: list<string>;
-}
+} deriving (parcel, eq)
+
+another_record = record {
+    key1: i32;
+    key2: string;
+    key3: binary;
+    key4: item_list;
+    key5: bool;
+    key6: map<string, i32>;
+    key7: f32;
+    key8: f64;
+    key9: i64;
+    key10: i8;
+    key11: i16;
+} deriving (parcel, eq)
 
 sort_order = enum {
     ascending;
@@ -21,7 +35,7 @@ super_super_listener = interface +j +o {
     updateSuper();
 }
 
-super_listtener: super_super_listener = interface +j +o {
+super_listtener: super_super_listener = interface +j +proxy {
     update(items: item_list);
 }
 

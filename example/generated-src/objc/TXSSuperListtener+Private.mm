@@ -3,36 +3,11 @@
 
 #import "TXSSuperListtener+Private.h"
 #import "TXSSuperListtener.h"
-#import "DJIObjcWrapperCache+Private.h"
+#import "DJIError.h"
 #import "TXSItemList+Private.h"
 #include <stdexcept>
 
 static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for this file");
-
-namespace djinni_generated {
-
-class SuperListtener::ObjcProxy final
-: public ::textsort::SuperListtener
-, private ::djinni::ObjcProxyBase<ObjcType>
-{
-    friend class ::djinni_generated::SuperListtener;
-public:
-    using ObjcProxyBase::ObjcProxyBase;
-    void update(const ::textsort::ItemList & c_items) override
-    {
-        @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() update:(::djinni_generated::ItemList::fromCpp(c_items))];
-        }
-    }
-    void updateSuper() override
-    {
-        @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() updateSuper];
-        }
-    }
-};
-
-}  // namespace djinni_generated
 
 namespace djinni_generated {
 
@@ -41,7 +16,7 @@ auto SuperListtener::toCpp(ObjcType objc) -> CppType
     if (!objc) {
         return nullptr;
     }
-    return ::djinni::get_objc_proxy<ObjcProxy>(objc);
+    DJINNI_UNIMPLEMENTED(@"Interface not implementable in any language.");
 }
 
 auto SuperListtener::fromCppOpt(const CppOptType& cpp) -> ObjcType
@@ -49,7 +24,7 @@ auto SuperListtener::fromCppOpt(const CppOptType& cpp) -> ObjcType
     if (!cpp) {
         return nil;
     }
-    return dynamic_cast<ObjcProxy&>(*cpp).djinni_private_get_proxied_objc_object();
+    DJINNI_UNIMPLEMENTED(@"Interface not implementable in any language.");
 }
 
 }  // namespace djinni_generated
