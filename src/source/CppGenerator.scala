@@ -343,6 +343,9 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
               }
               w.decrease()
               w.wl("}")
+              if (!ret.equals("void")) {
+                w.wl("return NULL;")
+              }
               w.decrease()
               w.wl("}")
             } else {
