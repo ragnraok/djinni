@@ -27,26 +27,6 @@ private:
     static ProxyConstructorMap* instance;
 };
 
-static void map_interface_default_constructor(JNIEnv *env, jclass , jstring classname, jstring interface) {
-    const char* _classname = env->GetStringUTFChars(classname, JNI_FALSE);
-    const char* _interface = env->GetStringUTFChars(interface, JNI_FALSE);
-    ProxyConstructorMap::get()->mapConstructor(_classname, _interface);
-    env->ReleaseStringUTFChars(classname, _classname);
-    env->ReleaseStringUTFChars(interface, _interface);
-}
-
-
-static void register_constructor_proxy_method() {
-    jclass cls = jniGetThreadEnv()->FindClass("com/djinni/ConstructProxy");
-    const JNINativeMethod sMethods[] = {
-        {"proxyDefaultConstructor", "(Ljava/lang/String;Ljava/lang/String;)V",
-            (void*)map_interface_default_constructor}
-    };
-    if (cls) {
-        jniGetThreadEnv()->RegisterNatives(cls, sMethods, 1);
-    }
-}
-
 template <typename CppType, typename JniProxyType>
 static std::shared_ptr<CppType> proxyCreateJavaObject(const char* interfaceName) {
     jobject obj = ProxyConstructorMap::get()->createObject(interfaceName);

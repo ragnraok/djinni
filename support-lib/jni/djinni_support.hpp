@@ -637,5 +637,4 @@ void jniDefaultSetPendingFromCurrent(JNIEnv * env, const char * ctx) noexcept;
         e.set_as_pending(env); \
         return ret; \
     }
-
 } // namespace djinni
