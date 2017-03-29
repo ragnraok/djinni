@@ -399,7 +399,7 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
     if (i.ext.java) {
       w.wl("#ifdef __ANDROID__")
       val jniClassName = jniMarshal.helperClass(ident)
-      w.wl("#include " + "\"" + jniClassName + "." + spec.cppHeaderExt + "\"")
+      w.wl(s"#include ${jniMarshal.include(ident)}")
       w.wl("#include \"djinni_proxy_constructor.hpp\"")
       w.wl
       w.wl("#define CREATE_PROXY_OBJC(PTR) \\")
