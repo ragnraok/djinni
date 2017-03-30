@@ -296,6 +296,7 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
               var needClassLoader = false
               var isShort = false
               var isBool = false
+              var needTypeCast = false;
               val parcelTypename = {
                 typename match {
                   case "byte" | "int" | "long" | "float" | "double" | "String" => typename.charAt(0).toUpper + typename.substring(1)
@@ -320,7 +321,8 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
                       "HashMap"
                     } else {
                       needClassLoader = true
-                      "Parcelable"
+                      needTypeCast = true
+                      "Value"
                     }
                   }
                 }
@@ -331,7 +333,11 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
                 w.wl(s"this.${idJava.field(f.ident)} = new byte[len];")
                 w.wl(s"in.read$parcelTypename(${idJava.field(f.ident)});")
               } else if (needClassLoader) {
-                w.wl(s"this.${idJava.field(f.ident)} = in.read$parcelTypename(getClass().getClassLoader());")
+                if (needTypeCast) {
+                  w.wl(s"this.${idJava.field(f.ident)} = ($typename)in.read$parcelTypename(getClass().getClassLoader());")
+                } else {
+                  w.wl(s"this.${idJava.field(f.ident)} = in.read$parcelTypename(getClass().getClassLoader());")
+                }
               } else if (isShort) {
                 w.wl(s"this.${idJava.field(f.ident)} = (short)in.read$parcelTypename();")
               } else if (isBool) {
@@ -358,7 +364,7 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
             for (f <- r.fields) {
               val typename = marshal.typename(f.ty);
               var isByteArray = false
-              var isParcelable = false
+              var isOtherType = false
               var isShort = false
               var isBool = false
               val parcelTypename = {
@@ -382,8 +388,8 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
                     } else if (typename.startsWith("HashMap")) {
                       "Map"
                     } else {
-                      isParcelable = true
-                      "Parcelable"
+                      isOtherType = true
+                      "Value"
                     }
                   }
                 }
@@ -391,8 +397,8 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
               if (isByteArray) {
                 w.wl(s"dest.writeInt(${idJava.field(f.ident)}.length);")
                 w.wl(s"dest.write$parcelTypename(${idJava.field(f.ident)});")
-              } else if (isParcelable) {
-                w.wl(s"dest.write$parcelTypename(${idJava.field(f.ident)}, 0);")
+              } else if (isOtherType) {
+                w.wl(s"dest.write$parcelTypename(${idJava.field(f.ident)});")
               } else if (isShort) {
                 w.wl(s"dest.writeInt((int)${idJava.field(f.ident)});")
               } else if (isBool) {
