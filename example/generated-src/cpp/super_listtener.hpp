@@ -4,6 +4,7 @@
 #pragma once
 
 #include "super_super_listener.hpp"
+#include <memory>
 
 namespace textsort {
 
@@ -12,9 +13,31 @@ struct ItemList;
 
 class SuperListtener : public SuperSuperListener {
 public:
-    virtual ~SuperListtener() {}
+    SuperListtener() {}
+    virtual ~SuperListtener() { this->_objPtr.reset(); }
 
-    virtual void update(const ItemList & items) {}
+    virtual void update(const ItemList & items) {
+        if (this->_objPtr) {
+            this->_objPtr->update(items);
+        }
+    }
+
+    virtual void updateSuper() {
+        if (this->_objPtr) {
+            this->_objPtr->updateSuper();
+        }
+    }
+    static SuperListtener create() {
+        return SuperListtener(true);
+    }
+private:
+    void init();
+    std::shared_ptr<SuperListtener> _objPtr;
+    SuperListtener(bool _fromCpp) {
+        if (_fromCpp) {
+            init();
+        }
+    }
 };
 
 }  // namespace textsort

@@ -9,7 +9,7 @@ class SuperSuperListener {
 public:
     virtual ~SuperSuperListener() {}
 
-    virtual void updateSuper() {}
+    virtual void updateSuper() = 0;
 };
 
 }  // namespace textsort

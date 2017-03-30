@@ -14,7 +14,8 @@ another_record = record {
     key9: i64;
     key10: i8;
     key11: i16;
-} deriving (parcel, eq)
+    key12: sort_order;
+} deriving (parcel)
 
 sort_order = enum {
     ascending;

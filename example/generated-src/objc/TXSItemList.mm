@@ -19,6 +19,21 @@
     return [[self alloc] initWithItems:items];
 }
 
+- (BOOL)isEqual:(id)other
+{
+    if (![other isKindOfClass:[TXSItemList class]]) {
+        return NO;
+    }
+    TXSItemList *typedOther = (TXSItemList *)other;
+    return [self.items isEqualToArray:typedOther.items];
+}
+
+- (NSUInteger)hash
+{
+    return NSStringFromClass([self class]).hash ^
+            self.items.hash;
+}
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@ %p items:%@>", self.class, (void *)self, self.items];

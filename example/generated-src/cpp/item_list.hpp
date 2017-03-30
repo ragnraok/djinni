@@ -12,6 +12,9 @@ namespace textsort {
 struct ItemList final {
     std::vector<std::string> items;
 
+    friend bool operator==(const ItemList& lhs, const ItemList& rhs);
+    friend bool operator!=(const ItemList& lhs, const ItemList& rhs);
+
     ItemList(std::vector<std::string> items_)
     : items(std::move(items_))
     {}

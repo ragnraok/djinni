@@ -3,9 +3,11 @@
 
 package com.dropbox.textsort;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import java.util.ArrayList;
 
-/*package*/ final class ItemList {
+/*package*/ final class ItemList implements Parcelable {
 
 
     /*package*/ final ArrayList<String> mItems;
@@ -15,8 +17,46 @@ import java.util.ArrayList;
         this.mItems = items;
     }
 
+    public ItemList(Parcel in) {
+        this.mItems = in.readArrayList(getClass().getClassLoader());
+    }
+
+    @Override
+    public int describeContents() { return 0; }
+
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(mItems);
+    }
+
+    public static final Creator<ItemList> CREATOR = new Creator<ItemList>() {
+        @Override
+        public ItemList createFromParcel(Parcel in) { return new ItemList(in); }
+
+        @Override
+        public ItemList[] newArray(int size) { return new ItemList[size]; }
+    };
+
     public ArrayList<String> getItems() {
         return mItems;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ItemList)) {
+            return false;
+        }
+        ItemList other = (ItemList) obj;
+        return this.mItems.equals(other.mItems);
+    }
+
+    @Override
+    public int hashCode() {
+        // Pick an arbitrary non-zero starting value
+        int hashCode = 17;
+        hashCode = hashCode * 31 + mItems.hashCode();
+        return hashCode;
     }
 
     @Override
