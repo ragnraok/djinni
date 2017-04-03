@@ -63,7 +63,8 @@ class ObjcppGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
 
   override def generateInterface(origin: String, ident: Ident, doc: Doc, typeParams: Seq[TypeParam], i: Interface) {
     val refs = new ObjcRefs()
-    i.methods.map(m => {
+    val allMethods = Seq.concat[Interface.Method](i.methods, i.superMethods)
+    allMethods.map(m => {
       m.params.map(p => refs.find(p.ty))
       m.ret.foreach(refs.find)
     })

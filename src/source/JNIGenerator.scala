@@ -177,7 +177,8 @@ class JNIGenerator(spec: Spec) extends Generator(spec) {
 
   override def  generateInterface(origin: String, ident: Ident, doc: Doc, typeParams: Seq[TypeParam], i: Interface) {
     val refs = new JNIRefs(ident.name)
-    i.methods.foreach(m => {
+    val allMethods = Seq.concat[Interface.Method](i.methods, i.superMethods)
+    allMethods.foreach(m => {
       m.params.foreach(p => refs.find(p.ty))
       m.ret.foreach(refs.find)
     })
