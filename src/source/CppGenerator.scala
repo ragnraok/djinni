@@ -281,10 +281,11 @@ class CppGenerator(spec: Spec) extends Generator(spec) {
     if (i.ext.java || i.ext.objc) {
       i.parent match {
         case Some(superclass) => {
+          val superInclude = marshal.include(superclass.expr.ident.name)
           val supertypename = marshal.typename(superclass.expr.ident.name)
           superclassLiter = s" : public $supertypename"
           val superclassfilename = superclass.expr.ident.name + ".hpp"
-          refs.hpp.add("#include " + "\"" + superclassfilename + "\"")
+          refs.hpp.add(s"#include $superInclude")
           refs.hppFwds.add(s"class $supertypename;")
         }
         case _ => {
