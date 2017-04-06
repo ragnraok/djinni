@@ -112,7 +112,7 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
 
     refs.header.add("#import <Foundation/Foundation.h>")
     
-    var inhertLiter = ""
+    var inhertLiter = " <NSObject>"
     i.parent match {
       case Some(supertype) => {
         val superincludefilename = marshal.headerName(supertype.expr.ident.name)
